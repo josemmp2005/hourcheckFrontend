@@ -1,12 +1,21 @@
 @import "tailwindcss";
 
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
 @theme {
   --color-primary: #2B2D42;
   --color-secondary: #ffffff;
   --color-link: #2563eb;
   --color-link-hover: #1d4ed8;
+  --color-button: #2b7fff;
+  --color-button-hover: #1d4ed8;
 }
 /* stylelint-disable-next-line at-rule-no-unknown */
+
+/* Clase de utilidad para enlaces */
 @utility link {
   color: theme(--color-link);
   text-decoration: underline;
@@ -17,3 +26,16 @@
     text-decoration: none;
   }
 }
+/* Clase de utilidad para botones */
+@utility btn {
+    background: linear-gradient(to bottom, theme(colors.blue.400), theme(colors.blue.600));
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: 0.2s ease, filter 0.2s ease;
+    
+    &:hover {
+      filter: brightness(110%);
+    }
+  }
