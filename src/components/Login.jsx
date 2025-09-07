@@ -1,7 +1,46 @@
+
 import google from "../assets/google.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password_hash, setpassword_hash] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    try {
+      const response = await fetch("http://localhost:3000/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password_hash }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Credenciales inválidas");
+      }
+      
+
+      const data = await response.json();
+
+      // Decodificar el token para comprobar el rol
+      alert("Acceso correcto");
+      localStorage.setItem("token", data.token);
+      navigate("/select-company");
+    } catch (error) {
+      setError(error.message || "Error al iniciar sesión");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="login-wrapper bg-primary flex flex-col items-center h-screen w-screen">
@@ -26,24 +65,33 @@ export default function Login() {
                 Iniciar sesión en HourCheck
               </h2>
             </div>
-            <div className="form flex flex-col items-center w-full">
+            <form className="form flex flex-col items-center w-full" onSubmit={handleLogin}>
               <div className="input-container flex flex-col mt-20 mb-10 rounded-md w-full pl-10 pr-10">
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
                   type="email"
                   id="email"
                   placeholder="Correo"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                 />
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
                   type="password"
-                  id="password"
+                  id="password_hash"
                   placeholder="Contraseña"
+                  value={password_hash}
+                  onChange={e => setpassword_hash(e.target.value)}
                 />
               </div>
+              {error && (
+                <div className="text-red-500 text-sm mb-2">{error}</div>
+              )}
               <div className="button-container flex flex-col">
-                <button className="btn">
-                  <p className="text-l text-white">Iniciar sesión</p>
+                <button className="btn" type="submit" disabled={isLoading}>
+                  <p className="text-l text-white">
+                    {isLoading ? "Cargando..." : "Iniciar sesión"}
+                  </p>
                 </button>
                 <Link className="google-button bg-gray-100 p-3 rounded-md mt-5 flex align-center hover:bg-gray-200 transition ease-in-out">
                   <img
@@ -60,7 +108,7 @@ export default function Login() {
                   Regístrate
                 </Link>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
