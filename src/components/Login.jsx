@@ -5,14 +5,12 @@ import { useState } from "react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
-  const [password_hash, setpassword_hash] = useState("");
+  const [passwordHash, setPasswordHash] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
     try {
       const response = await fetch("http://localhost:3000/users/login", {
@@ -20,13 +18,12 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password_hash }),
+        body: JSON.stringify({ email, password_hash: passwordHash }),
       });
 
       if (!response.ok) {
         throw new Error("Credenciales inválidas");
       }
-      
 
       const data = await response.json();
 
@@ -36,8 +33,6 @@ export default function Login() {
       navigate("/select-company");
     } catch (error) {
       setError(error.message || "Error al iniciar sesión");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -80,18 +75,16 @@ export default function Login() {
                   type="password"
                   id="password_hash"
                   placeholder="Contraseña"
-                  value={password_hash}
-                  onChange={e => setpassword_hash(e.target.value)}
+                  value={passwordHash}
+                  onChange={e => setPasswordHash(e.target.value)}
                 />
               </div>
               {error && (
                 <div className="text-red-500 text-sm mb-2">{error}</div>
               )}
               <div className="button-container flex flex-col">
-                <button className="btn" type="submit" disabled={isLoading}>
-                  <p className="text-l text-white">
-                    {isLoading ? "Cargando..." : "Iniciar sesión"}
-                  </p>
+                <button className="btn" type="submit">
+                  <p className="text-l text-white">Iniciar sesión</p>
                 </button>
                 <Link className="google-button bg-gray-100 p-3 rounded-md mt-5 flex align-center hover:bg-gray-200 transition ease-in-out">
                   <img

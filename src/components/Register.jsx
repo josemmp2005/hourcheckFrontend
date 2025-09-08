@@ -1,7 +1,62 @@
 import google from "../assets/google.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-export default function Register() {
+
+export default function Register() {º
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [passwordHash, setPasswordHash] = useState("");
+  const [confirmPasswordHash, setConfirmPasswordHash] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (password_hash !== confirmpassword_hash) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password_hash }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al registrarse");
+      }
+
+      const data = await response.json();
+      alert("Registro correcto");
+
+      const dataLogin = await fetch("http://localhost:3000/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password_hash }),
+      });
+      if (!dataLogin.ok) {
+        throw new Error("Credenciales inválidas");
+      }
+      const loginResponse = await dataLogin.json();
+      localStorage.setItem("token", loginResponse.token);
+      navigate("/select-company");
+
+
+    } catch (error) {
+      setError(error.message || "Error al registrarse");
+    }
+
+  };
+
   return (
     <>
       <div className="login-wrapper bg-primary flex flex-col items-center h-screen w-screen">
@@ -24,31 +79,39 @@ export default function Register() {
             <div className="subtitle flex justify-center">
               <h2 className="text-l font-semibold">Regístrate en HourCheck</h2>
             </div>
-            <div className="form flex flex-col items-center w-full">
+            <form className="form flex flex-col items-center w-full" onSubmit={handleRegister}>
               <div className="input-container flex flex-col mt-20 mb-10 rounded-md w-full pl-10 pr-10">
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
                   type="text"
                   id="name"
                   placeholder="Elige un nombre"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
                 />
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
                   type="email"
                   id="email"
                   placeholder="Correo"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                 />
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
-                  type="password"
-                  id="password"
+                  type="password_hash"
+                  id="password_hash"
                   placeholder="Contraseña"
+                  value={password_hash}
+                  onChange={e => setpassword_hash(e.target.value)}
                 />
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
-                  type="password"
-                  id="confirm-password"
+                  type="password_hash"
+                  id="confirm-password_hash"
                   placeholder="Contraseña"
+                  value={confirmpassword_hash}
+                  onChange={ e => setConfirmpassword_hash(e.target.value)}
                 />
               </div>
               <div className="button-container flex flex-col">
@@ -68,7 +131,7 @@ export default function Register() {
                   Inicia sesión
                 </Link>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
