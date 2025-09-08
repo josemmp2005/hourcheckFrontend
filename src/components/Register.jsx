@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 
-export default function Register() {º
+export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [passwordHash, setPasswordHash] = useState("");
@@ -15,7 +15,7 @@ export default function Register() {º
     e.preventDefault();
     setError("");
 
-    if (password_hash !== confirmpassword_hash) {
+    if (passwordHash !== confirmPasswordHash) {
       setError("Las contraseñas no coinciden");
       return;
     }
@@ -26,7 +26,7 @@ export default function Register() {º
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password_hash }),
+        body: JSON.stringify({ name, email, password_hash: passwordHash }),
       });
 
       if (!response.ok) {
@@ -41,7 +41,7 @@ export default function Register() {º
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password_hash }),
+        body: JSON.stringify({ email, password_hash: passwordHash }),
       });
       if (!dataLogin.ok) {
         throw new Error("Credenciales inválidas");
@@ -99,19 +99,19 @@ export default function Register() {º
                 />
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
-                  type="password_hash"
+                  type="password"
                   id="password_hash"
                   placeholder="Contraseña"
-                  value={password_hash}
-                  onChange={e => setpassword_hash(e.target.value)}
+                  value={passwordHash}
+                  onChange={e => setPasswordHash(e.target.value)}
                 />
                 <input
                   className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none"
-                  type="password_hash"
+                  type="password"
                   id="confirm-password_hash"
-                  placeholder="Contraseña"
-                  value={confirmpassword_hash}
-                  onChange={ e => setConfirmpassword_hash(e.target.value)}
+                  placeholder="Repite la contraseña"
+                  value={confirmPasswordHash}
+                  onChange={e => setConfirmPasswordHash(e.target.value)}
                 />
               </div>
               <div className="button-container flex flex-col">
