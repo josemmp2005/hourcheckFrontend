@@ -3,6 +3,7 @@ import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 import Register from './components/Register.jsx'
 import SelectCompany from './components/SelectCompany.jsx'
+import UpdateUserInfo from './components/UpdateUserInfo.jsx'
 
 export default function App() {
 
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/select-company" element={<SelectCompany />} />
+        <Route path="/update-user-info" element={<UpdateUserInfo />} />
       </Routes>
     </BrowserRouter>
   )

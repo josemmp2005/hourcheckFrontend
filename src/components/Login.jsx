@@ -1,7 +1,8 @@
 
-import google from "../assets/google.svg";
+import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -49,15 +50,15 @@ export default function Login() {
         <div className="card bg-white w-8/10 h-8/10 border-2 border-gray-300 rounded-2xl mt-10 pb-10 max-w-[350px] max-h-fit">
           <div className="card-content">
             <div className="photo pt-10 pb-5 flex justify-center">
-              <img
-                className="w-15 h-15 rounded-full border-2"
-                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                alt="Foto de perfil"
-              />
+                <img
+                  className="w-20 h-20 rounded-full object-cover"
+                  src={logo}
+                  alt="Foto de perfil"
+                />
             </div>
             <div className="subtitle flex justify-center">
               <h2 className="text-l font-semibold">
-                Iniciar sesión en HourCheck
+                Iniciar sesión
               </h2>
             </div>
             <form className="form flex flex-col items-center w-full" onSubmit={handleLogin}>
@@ -86,14 +87,28 @@ export default function Login() {
                 <button className="btn" type="submit">
                   <p className="text-l text-white">Iniciar sesión</p>
                 </button>
-                <Link className="google-button bg-gray-100 p-3 rounded-md mt-5 flex align-center hover:bg-gray-200 transition ease-in-out">
-                  <img
-                    src={google}
-                    alt="Google"
-                    className="w-5 h-5 mt-0.5 mr-2"
+                <div className="mt-5 flex flex-col items-center">
+                  <GoogleLogin
+                    onSuccess={credentialResponse => {
+                      fetch('http://localhost:3000/users/google-login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: credentialResponse.credential })
+                      })
+                        .then(res => res.json())
+                        .then(data => {
+                          if (data.token) {
+                            localStorage.setItem('token', data.token);
+                            navigate('/select-company');
+                          } else {
+                            setError('Error al iniciar sesión con Google');
+                          }
+                        })
+                        .catch(() => setError('Error al iniciar sesión con Google'));
+                    }}
+                    onError={() => setError('Error al iniciar sesión con Google')}
                   />
-                  <p>Continuar con Google</p>
-                </Link>
+                </div>
               </div>
               <div className="register-container items-center flex gap-1 mt-10">
                 <p className="text-l">¿No tienes una cuenta?</p>

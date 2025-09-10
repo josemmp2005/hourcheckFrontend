@@ -1,4 +1,4 @@
-import google from "../assets/google.svg";
+import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -71,13 +71,13 @@ export default function Register() {
           <div className="card-content">
             <div className="photo pt-10 pb-5 flex justify-center">
               <img
-                className="w-15 h-15 rounded-full border-2"
-                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                  className="w-20 h-20 rounded-full object-cover"
+                src={logo}
                 alt="Foto de perfil"
               />
             </div>
             <div className="subtitle flex justify-center">
-              <h2 className="text-l font-semibold">Regístrate en HourCheck</h2>
+              <h2 className="text-l font-semibold">Regístrate</h2>
             </div>
             <form className="form flex flex-col items-center w-full" onSubmit={handleRegister}>
               <div className="input-container flex flex-col mt-20 mb-10 rounded-md w-full pl-10 pr-10">
@@ -116,14 +116,6 @@ export default function Register() {
               </div>
               <div className="button-container flex flex-col">
                 <button className="btn">Regístrate</button>
-                <Link className="google-button bg-gray-100 p-3 rounded-md mt-5 flex align-center hover:bg-gray-200 transition ease-in-out">
-                  <img
-                    src={google}
-                    alt="Google"
-                    className="w-5 h-5 mt-0.5 mr-2"
-                  />
-                  Continuar con Google
-                </Link>
               </div>
               <div className="register-container items-center flex gap-1 mt-10">
                 <p className="text-l">¿Ya tienes una cuenta?</p>

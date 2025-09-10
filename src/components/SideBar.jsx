@@ -23,6 +23,11 @@ export default function SideBar() {
         };
     }, [visible]);
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+    };
+
     return (
         <div className="relative">
             <button
@@ -52,7 +57,7 @@ export default function SideBar() {
                     <Link to="/settings" className="hover:bg-gray-700 p-2 rounded transition">Configuración</Link>
                 </nav>
                 <div className="mt-auto">
-                    <button className="w-full bg-red-500 hover:bg-red-600 p-2 rounded mt-8">Cerrar sesión</button>
+                    <button className="w-full bg-red-500 hover:bg-red-600 p-2 rounded mt-8" onClick={handleLogout}>Cerrar sesión</button>
                 </div>
             </aside>
         </div>

@@ -1,21 +1,47 @@
 import { Link } from "react-router-dom";
 import SideBar from "./SideBar.jsx";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+  const token = localStorage.getItem("token");
+  const [userData, setUserData] = useState(null);
 
-  const userImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  const getUserData = async () => {
+    try {
+      const userData = await fetch("http://localhost:3000/users/info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      if (!userData.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+      const data = await userData.json();
+      setUserData(data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+
 
   return (
     <header className="header flex justify-between items-center px-6 py-4 bg-gray-900 shadow-lg">
-        <SideBar />
-        <div className="header-title">
-          <Link to="/" className="text-white text-2xl font-bold tracking-wide hover:text-blue-400 transition">
-            HourCheck
-          </Link>
-        </div>
+      <SideBar />
+      <div className="header-title">
+        <Link to="/" className="text-white text-2xl font-bold tracking-wide hover:text-blue-400 transition">
+          HourCheck
+        </Link>
+      </div>
       <div className="flex items-center gap-2">
         <img
-          src={userImg}
+          src={userData && userData.photo_url !== "none" ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
           alt="User"
           className="user-img w-12 h-12 rounded-full border-2 border-blue-400 shadow"
         />
