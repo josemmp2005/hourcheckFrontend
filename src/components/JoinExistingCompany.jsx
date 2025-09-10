@@ -9,10 +9,6 @@ export default function JoinExistingCompany() {
     const handleCheckInvitation = async (e) => {
         e.preventDefault();
         setError("");
-
-
-
-
     }
     
 

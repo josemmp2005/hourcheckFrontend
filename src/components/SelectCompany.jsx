@@ -4,6 +4,7 @@ import Header from "./Header.jsx";
 import logo from "../assets/logo.svg";
 
 export default function SelectCompany() {
+    localStorage.removeItem("company_id");
 
     const navigate = useNavigate();
     const [companies, setCompanies] = useState([]);
@@ -69,7 +70,10 @@ export default function SelectCompany() {
                     <div
                         className="company-card bg-white border border-gray-300 shadow-lg p-6 rounded-xl max-w-xs w-full cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-200 flex flex-col items-center"
                         key={item.company.id}
-                        onClick={() => navigate(`/company/${item.company.id}`)}
+                        onClick={() => {
+                            localStorage.setItem("company_id", item.company.id);
+                            navigate(`/dashboard`);
+                        }}
                     >
                         <img
                             src={item.company.photo_url !== "none" ? item.company.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
@@ -83,7 +87,6 @@ export default function SelectCompany() {
                     </div>
                 ))}
             </div>
-
         </>
     );
 }

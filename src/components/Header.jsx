@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 
 export default function Header() {
   const token = localStorage.getItem("token");
+  const companyId = localStorage.getItem("company_id");
   const [userData, setUserData] = useState(null);
+  const [companyData, setCompanyData] = useState(null);
 
   const getUserData = async () => {
     try {
@@ -29,14 +31,38 @@ export default function Header() {
     getUserData();
   }, []);
 
+    const getCompanyData = async () => {
+    try {
+      const companyData = await fetch("http://localhost:3000/companies/info", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: Number(companyId) })
+      });
+      if (!companyData.ok) {
+        throw new Error("Failed to fetch company data");
+      }
+      const data = await companyData.json();
+      setCompanyData(data);
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  }
 
+  useEffect(() => {
+    getCompanyData();
+  }, []);
+  console.log(companyId);
+  console.log("Company Data:", companyData);
 
   return (
     <header className="header flex justify-between items-center px-6 py-4 bg-gray-900 shadow-lg">
       <SideBar />
       <div className="header-title">
         <Link to="/" className="text-white text-2xl font-bold tracking-wide hover:text-blue-400 transition">
-          HourCheck
+          {companyData ? companyData.name : "HourCheck"}
         </Link>
       </div>
       <div className="flex items-center gap-2">
