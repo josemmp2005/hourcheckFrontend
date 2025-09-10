@@ -4,6 +4,8 @@ import Login from './components/Login.jsx'
 import Register from './components/Register.jsx'
 import SelectCompany from './components/SelectCompany.jsx'
 import UpdateUserInfo from './components/UpdateUserInfo.jsx'
+import CreateCompany from './components/CreateCompany.jsx'
+import JoinExistingCopmpany from './components/JoinExistingCompany.jsx'
 
 export default function App() {
 
@@ -15,6 +17,8 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/select-company" element={<SelectCompany />} />
         <Route path="/update-user-info" element={<UpdateUserInfo />} />
+        <Route path="/create-new-company" element={<CreateCompany />} />
+        <Route path="/join-existing-company" element={<JoinExistingCopmpany />} />
       </Routes>
     </BrowserRouter>
   )

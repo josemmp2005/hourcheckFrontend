@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./Header.jsx";
+import logo from "../assets/logo.svg";
 
 export default function SelectCompany() {
 
@@ -31,6 +32,31 @@ export default function SelectCompany() {
     useEffect(() => {
         getCompanmies();
     }, []);
+
+    if (companies.length === 0) {
+        return (
+            <>
+                <Header />
+                <div className="card bg-white w-8/10 h-8/10 border-2 border-gray-300 rounded-2xl mt-10 pb-10 max-w-[350px] max-h-fit justify-self-center mx-auto" >
+                    <img src={logo} alt="Logo" />
+                    <div className="flex flex-col items-center gap-4 mt-6">
+                        <a
+                            href="/create-new-company"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors text-center"
+                        >
+                            Crear nueva empresa
+                        </a>
+                        <a
+                            href="/join-existing-company"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors text-center"
+                        >
+                            Unirse a una empresa existente
+                        </a>
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     console.log(companies);
     return (
