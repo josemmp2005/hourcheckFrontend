@@ -21,6 +21,7 @@ export default function Header() {
         throw new Error("Failed to fetch user data");
       }
       const data = await userData.json();
+      console.log(data);
       setUserData(data);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -54,8 +55,8 @@ export default function Header() {
   useEffect(() => {
     getCompanyData();
   }, []);
-  console.log(companyId);
-  console.log("Company Data:", companyData);
+  // console.log(companyId);
+  // console.log("Company Data:", companyData);
 
   return (
     <header className="header flex justify-between items-center px-6 py-4 bg-gray-900 shadow-lg">
@@ -67,7 +68,7 @@ export default function Header() {
       </div>
       <div className="flex items-center gap-2">
         <img
-          src={userData && userData.photo_url !== "none" ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+          src={userData && userData.photo_url !==  null ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
           alt="User"
           className="user-img w-12 h-12 rounded-full border-2 border-blue-400 shadow"
         />

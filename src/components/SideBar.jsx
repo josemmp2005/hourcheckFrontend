@@ -4,6 +4,13 @@ import React, { useState, useRef } from "react";
 export default function SideBar() {
     const [visible, setVisible] = useState(false);
     const sidebarRef = useRef(null);
+    const rolUserOptions = {
+        "Clock In" : "/clock-in",
+        "Break": "/break",
+        "Absences": "/absences",
+        "Vacations": "/vacations",
+        "Info": "/info"
+    }
 
     // Cierra el sidebar al hacer clic fuera
     const handleClickOutside = (e) => {
@@ -51,10 +58,16 @@ export default function SideBar() {
                     <h2 className="text-2xl font-bold">HourCheck</h2>
                 </div>
                 <nav className="flex flex-col gap-4">
-                    <Link to="/home" className="hover:bg-gray-700 p-2 rounded transition">Inicio</Link>
-                    <Link to="/profile" className="hover:bg-gray-700 p-2 rounded transition">Perfil</Link>
-                    <Link to="/companies" className="hover:bg-gray-700 p-2 rounded transition">Empresas</Link>
-                    <Link to="/settings" className="hover:bg-gray-700 p-2 rounded transition">Configuración</Link>
+                    {Object.entries(rolUserOptions).map(([name, path]) => (
+                        <Link
+                            key={name}
+                            to={path}
+                            className="hover:bg-gray-700 p-2 rounded transition"
+                        >
+                            {name}
+                        </Link>
+                    ))}
+
                 </nav>
                 <div className="mt-auto">
                     <button className="w-full bg-red-500 hover:bg-red-600 p-2 rounded mt-8" onClick={handleLogout}>Cerrar sesión</button>

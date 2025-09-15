@@ -7,6 +7,8 @@ import UpdateUserInfo from './components/UpdateUserInfo.jsx'
 import CreateCompany from './components/CreateCompany.jsx'
 import JoinExistingCopmpany from './components/JoinExistingCompany.jsx'
 import Dashboard from './components/Dashboard.jsx'
+import AdminPanel from './components/AdminPanel.jsx'
+import ManagerPanel from "./components/ManagerPanel.jsx";
 
 export default function App() {
 
@@ -21,6 +23,8 @@ export default function App() {
         <Route path="/create-new-company" element={<CreateCompany />} />
         <Route path="/join-existing-company" element={<JoinExistingCopmpany />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/manager-panel" element={<ManagerPanel />} />
       </Routes>
     </BrowserRouter>
   )

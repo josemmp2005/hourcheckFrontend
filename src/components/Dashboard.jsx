@@ -4,6 +4,41 @@ import { useNavigate } from 'react-router-dom';
 export default function Dashboard() {
     const navigate = useNavigate();
 
+    const adminOptions = {
+        "Clock In": "/clock-in",
+        "Break": "/break",
+        "Absences": "/absences",
+        "Vacations": "/vacations",
+        "Info": "/info",
+        "Admin Panel": "/admin-panel"
+    };
+    const managerOptions = {
+        "Clock In": "/clock-in",
+        "Break": "/break",
+        "Absences": "/absences",
+        "Vacations": "/vacations",
+        "Info": "/info",
+        "Manager Panel": "/manager"
+    };
+    const userOptions = {
+        "Clock In": "/clock-in",
+        "Break": "/break",
+        "Absences": "/absences",
+        "Vacations": "/vacations",
+        "Info": "/info"
+    };
+
+    const role = localStorage.getItem("role_id");
+    const dashboardOptions = [];
+
+    if (role === "2") {
+        Object.assign(dashboardOptions, adminOptions);
+    } else if (role === "3") {
+        Object.assign(dashboardOptions, managerOptions);
+    } else if (role === "4") {
+        Object.assign(dashboardOptions, userOptions);
+    }
+
     return (
         <>
             <Header />
@@ -11,30 +46,15 @@ export default function Dashboard() {
                 <div className="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center max-w-lg w-full">
                     <h1 className="text-3xl font-bold text-blue-700 mb-8">Dashboard</h1>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                        <button
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6 rounded-xl shadow transition text-xl"
-                            onClick={() => navigate('/clock-in')}
-                        >
-                            Clock IN
-                        </button>
-                        <button
-                            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-6 rounded-xl shadow transition text-xl"
-                            onClick={() => navigate('/break')}
-                        >
-                            Break
-                        </button>
-                        <button
-                            className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-6 rounded-xl shadow transition text-xl"
-                            onClick={() => navigate('/absences')}
-                        >
-                            Absences
-                        </button>
-                        <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-6 rounded-xl shadow transition text-xl"
-                            onClick={() => navigate('/vacations')}
-                        >
-                            Vacations
-                        </button>
+                        {Object.entries(dashboardOptions).map(([label, path]) => (
+                            <button
+                                key={label}
+                                onClick={() => navigate(path)}
+                                className="bg-blue-500 text-white py-3 rounded-xl shadow hover:bg-blue-600 transition-colors w-full text-center font-semibold"
+                            >
+                                {label}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>

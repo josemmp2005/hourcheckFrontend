@@ -59,7 +59,29 @@ export default function SelectCompany() {
         );
     }
 
-    console.log(companies);
+
+    const saveUserCompanyInfo = async (companyId) => {
+        try {
+            const response = await fetch("http://localhost:3000/users/company/info", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ id: companyId })
+            });
+            if (!response.ok) {
+                throw new Error("Failed to save user company info");
+            }
+        const result = await response.json();
+        localStorage.setItem("role_id", result.role_id);
+        localStorage.setItem("work_mode_id", result.work_mode_id);
+        // console.log("company-user", result);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    // console.log(companies);
     return (
         <>
             <Header />
@@ -72,6 +94,7 @@ export default function SelectCompany() {
                         key={item.company.id}
                         onClick={() => {
                             localStorage.setItem("company_id", item.company.id);
+                            saveUserCompanyInfo(item.company.id)
                             navigate(`/dashboard`);
                         }}
                     >
