@@ -9,7 +9,8 @@ export default function SideBar() {
         "Break": "/break",
         "Absences": "/absences",
         "Vacations": "/vacations",
-        "Info": "/info"
+        "Info": "/info",
+        "Select Company": "/select-company",
     }
 
     // Cierra el sidebar al hacer clic fuera
