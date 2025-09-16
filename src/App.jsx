@@ -9,6 +9,8 @@ import JoinExistingCopmpany from './components/JoinExistingCompany.jsx'
 import Dashboard from './components/Dashboard.jsx'
 import AdminPanel from './components/AdminPanel.jsx'
 import ManagerPanel from "./components/ManagerPanel.jsx";
+import CompanyInvitations from "./components/CompanyInvitations.jsx";
+import CheckInvitation from "./components/CheckInvitation.jsx";
 
 export default function App() {
 
@@ -25,6 +27,8 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
         <Route path="/manager-panel" element={<ManagerPanel />} />
+        <Route path="/admin-panel/company-invitations" element={<CompanyInvitations />} />
+        <Route path="/invitation" element={<CheckInvitation />} />
       </Routes>
     </BrowserRouter>
   )

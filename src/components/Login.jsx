@@ -1,4 +1,3 @@
-
 import logo from "../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -90,10 +89,10 @@ export default function Login() {
                 <div className="mt-5 flex flex-col items-center">
                   <GoogleLogin
                     onSuccess={credentialResponse => {
-                      fetch('http://localhost:3000/users/google-login', {
+                      fetch('http://localhost:3000/users/login/google', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ token: credentialResponse.credential })
+                        body: JSON.stringify({ id_token: credentialResponse.credential })
                       })
                         .then(res => res.json())
                         .then(data => {

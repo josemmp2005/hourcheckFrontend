@@ -5,6 +5,8 @@ import logo from "../assets/logo.svg";
 
 export default function SelectCompany() {
     localStorage.removeItem("company_id");
+    localStorage.removeItem("work_mode_id");
+    // NO borres el role_id aquí
 
     const navigate = useNavigate();
     const [companies, setCompanies] = useState([]);
