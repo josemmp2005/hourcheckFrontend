@@ -11,6 +11,9 @@ import AdminPanel from './components/AdminPanel.jsx'
 import ManagerPanel from "./components/ManagerPanel.jsx";
 import CompanyInvitations from "./components/CompanyInvitations.jsx";
 import CheckInvitation from "./components/CheckInvitation.jsx";
+import ClockIn from "./components/ClockIn.jsx";
+import EmployeesManagement from "./components/EmployeesManagement.jsx";
+import EmployeeManagement from "./components/EmployeeManagement.jsx";
 
 export default function App() {
 
@@ -29,6 +32,9 @@ export default function App() {
         <Route path="/manager-panel" element={<ManagerPanel />} />
         <Route path="/admin-panel/company-invitations" element={<CompanyInvitations />} />
         <Route path="/invitation" element={<CheckInvitation />} />
+        <Route path="/clock-in" element={<ClockIn />} />
+        <Route path="/admin-panel/employees-management" element={<EmployeesManagement/>} />
+        <Route path="/admin-panel/employee-management/:id" element={<EmployeeManagement/>} />
       </Routes>
     </BrowserRouter>
   )

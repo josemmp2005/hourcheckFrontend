@@ -6,8 +6,7 @@ export default function AdminPanel() {
 
     const adminPanelOptions = {
         "Company Invitations": "/admin-panel/company-invitations",
-        "User Management": "/admin-panel/user-management",
-        "Role Management": "/admin-panel/role-management",
+        "Employees Management": "/admin-panel/employees-management",
         "Permission Management": "/admin-panel/permission-management",
         "Audit Logs": "/admin-panel/audit-logs",
         "Company Settings": "/admin-panel/company-settings",

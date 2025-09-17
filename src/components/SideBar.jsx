@@ -4,13 +4,43 @@ import React, { useState, useRef } from "react";
 export default function SideBar() {
     const [visible, setVisible] = useState(false);
     const sidebarRef = useRef(null);
-    const rolUserOptions = {
-        "Clock In" : "/clock-in",
+    const role = localStorage.getItem("role_id");
+    const adminOptions = {
+        "Clock In": "/clock-in",
         "Break": "/break",
         "Absences": "/absences",
         "Vacations": "/vacations",
         "Info": "/info",
-        "Select Company": "/select-company",
+        "Admin Panel": "/admin-panel",
+        "Select Company": "/select-company"
+    };
+    const managerOptions = {
+        "Clock In": "/clock-in",
+        "Break": "/break",
+        "Absences": "/absences",
+        "Vacations": "/vacations",
+        "Info": "/info",
+        "Manager Panel": "/manager",
+        "Select Company": "/select-company"
+
+    };
+    const userOptions = {
+        "Clock In": "/clock-in",
+        "Break": "/break",
+        "Absences": "/absences",
+        "Vacations": "/vacations",
+        "Info": "/info",
+        "Select Company": "/select-company"
+    };
+
+    let sidebarOptions = {};
+    if (role === "2") {
+        sidebarOptions = adminOptions;
+    }
+    else if (role === "3") {
+        sidebarOptions = managerOptions;
+    } else if (role === "4") {
+        sidebarOptions = userOptions;
     }
 
     // Cierra el sidebar al hacer clic fuera
@@ -59,7 +89,7 @@ export default function SideBar() {
                     <h2 className="text-2xl font-bold">HourCheck</h2>
                 </div>
                 <nav className="flex flex-col gap-4">
-                    {Object.entries(rolUserOptions).map(([name, path]) => (
+                    {Object.entries(sidebarOptions).map(([name, path]) => (
                         <Link
                             key={name}
                             to={path}
