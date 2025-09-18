@@ -95,7 +95,7 @@ export default function EmployeesManagement() {
                             .map(emp => (
                                 <div key={emp.user.id} className="company-card bg-white border border-gray-300 shadow-lg p-6 rounded-xl max-w-xs w-full cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-200 flex flex-col items-center"
                                     onClick={() => {
-                                        navigate(`/admin-panel/employee-management/${emp.user.id}`);
+                                        navigate(`/admin-panel/employee-management?id=${emp.user.id}`);
                                     }}
                                 >
                                     <img src={emp.user.image ? emp.user.image : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt={emp.user.name} className="w-24 h-24 rounded-full mb-4" />

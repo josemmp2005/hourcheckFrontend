@@ -5,7 +5,7 @@ export default function CheckInvitation() {
 
     const url = new URL(window.location.href);
     const token = url.searchParams.get("token");
-    console.log(token);
+    // console.log(token);
     const userToken = localStorage.getItem("token");
 
     const responseInvitation = async () => {
@@ -22,7 +22,6 @@ export default function CheckInvitation() {
                 throw new Error("Failed to accept invitation");
             }
             const data = await response.json();
-            console.log("asdjas");
         } catch (error) {
             console.error("Error accepting invitation:", error);
         }

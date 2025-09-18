@@ -1,6 +1,6 @@
 import Header from "./Header.jsx";
 import {useState} from  "react";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo.png";
 
 
 export default function JoinExistingCompany() {

@@ -21,7 +21,7 @@ export default function Header() {
         throw new Error("Failed to fetch user data");
       }
       const data = await userData.json();
-      console.log(data);
+      // console.log(data);
       setUserData(data);
     } catch (error) {
       console.error("Error fetching user data:", error);

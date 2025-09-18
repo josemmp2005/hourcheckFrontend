@@ -9,6 +9,7 @@ export default function CreateCompany() {
     const [emailContact, setEmailContact] = useState("");
     const [logoPhotoUrl, setLogoPhotoUrl] = useState("");
     const [error, setError] = useState("");
+    
 
     const handleCreateCompany = async (e) => {
         e.preventDefault();

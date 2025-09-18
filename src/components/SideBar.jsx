@@ -12,7 +12,8 @@ export default function SideBar() {
         "Vacations": "/vacations",
         "Info": "/info",
         "Admin Panel": "/admin-panel",
-        "Select Company": "/select-company"
+        "Select Company": "/select-company",
+        "Profile": "/profile"
     };
     const managerOptions = {
         "Clock In": "/clock-in",
@@ -21,7 +22,8 @@ export default function SideBar() {
         "Vacations": "/vacations",
         "Info": "/info",
         "Manager Panel": "/manager",
-        "Select Company": "/select-company"
+        "Select Company": "/select-company",
+        "Profile": "/profile"
 
     };
     const userOptions = {
@@ -30,7 +32,8 @@ export default function SideBar() {
         "Absences": "/absences",
         "Vacations": "/vacations",
         "Info": "/info",
-        "Select Company": "/select-company"
+        "Select Company": "/select-company",
+        "Profile": "/profile"
     };
 
     let sidebarOptions = {};
