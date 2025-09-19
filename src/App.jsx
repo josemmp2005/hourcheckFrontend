@@ -14,6 +14,7 @@ import CheckInvitation from "./components/CheckInvitation.jsx";
 import ClockIn from "./components/ClockIn.jsx";
 import EmployeesManagement from "./components/EmployeesManagement.jsx";
 import EmployeeManagement from "./components/EmployeeManagement.jsx";
+import ShiftsManagements from "./components/SihftsManagements.jsx";
 import Profile from "./components/Profile.jsx";
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/clock-in" element={<ClockIn />} />
         <Route path="/admin-panel/employees-management" element={<EmployeesManagement/>} />
         <Route path="/admin-panel/employee-management" element={<EmployeeManagement/>} />
+        <Route path="/admin-panel/shifts-management" element={<ShiftsManagements/>} />
         <Route path="/profile" element={<Profile/>} />
       </Routes>
     </BrowserRouter>

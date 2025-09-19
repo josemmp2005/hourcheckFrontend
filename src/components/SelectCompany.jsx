@@ -11,6 +11,7 @@ export default function SelectCompany() {
     const navigate = useNavigate();
     const [companies, setCompanies] = useState([]);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
     const token = localStorage.getItem("token");
 
     const getCompanmies = async () => {
@@ -29,12 +30,26 @@ export default function SelectCompany() {
             setCompanies(data);
         } catch (error) {
             setError(error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         getCompanmies();
     }, []);
+
+    if (loading) {
+        return (
+            <>
+                <Header />
+                <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6" style={{ borderColor: "var(--color-secondary)"}}></div>
+                    <span className="font-semibold text-lg" style={{ color: "var(--color-secondary)" }}>Cargando empresas...</span>
+                </div>
+            </>
+        );
+    }
 
     if (companies.length === 0) {
         return (
@@ -61,7 +76,6 @@ export default function SelectCompany() {
         );
     }
 
-
     const saveUserCompanyInfo = async (companyId) => {
         try {
             const response = await fetch("http://localhost:3000/users/company/info", {
@@ -75,15 +89,14 @@ export default function SelectCompany() {
             if (!response.ok) {
                 throw new Error("Failed to save user company info");
             }
-        const result = await response.json();
-        localStorage.setItem("role_id", result.role_id);
-        localStorage.setItem("work_mode_id", result.work_mode_id);
-        // console.log("company-user", result);
+            const result = await response.json();
+            localStorage.setItem("role_id", result.role_id);
+            localStorage.setItem("work_mode_id", result.work_mode_id);
         } catch (error) {
             console.error(error);
         }
     };
-    // console.log(companies);
+
     return (
         <>
             <Header />

@@ -59,7 +59,7 @@ export default function Header() {
   // console.log("Company Data:", companyData);
 
   return (
-    <header className="header flex justify-between items-center px-6 py-4 bg-gray-900 shadow-lg">
+    <header className="header flex justify-between items-center px-6 py-4 shadow-lg" style={{ backgroundColor: "var(--color-primary)"} }>
       <SideBar />
       <div className="header-title">
         <Link to="/" className="text-white text-2xl font-bold tracking-wide hover:text-blue-400 transition">

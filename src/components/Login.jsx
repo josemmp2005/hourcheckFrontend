@@ -8,6 +8,7 @@ export default function Login() {
   const [passwordHash, setPasswordHash] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const invitationToken = localStorage.getItem("invitation-token");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -38,13 +39,13 @@ export default function Login() {
 
   return (
     <>
-      <div className="login-wrapper bg-primary flex flex-col items-center h-screen w-screen">
+      <div className={`login-wrapper bg-primary flex flex-col items-center h-screen w-screen`}>
         <Link
           to="/"
           className="home-button bg-secundary p-2 rounded-md"
           href="/home"
         >
-          <h1 className="title text-l font-bold text-white mt-10">HourCheck</h1>
+          <h1 className="title text-2 xl font-bold text-white mt-10">HourCheck</h1>
         </Link>
         <div className="card bg-white w-8/10 h-8/10 border-2 border-gray-300 rounded-2xl mt-10 pb-10 max-w-[350px] max-h-fit">
           <div className="card-content">
@@ -83,8 +84,8 @@ export default function Login() {
                 <div className="text-red-500 text-sm mb-2">{error}</div>
               )}
               <div className="button-container flex flex-col">
-                <button className="btn" type="submit">
-                  <p className="text-l text-white">Iniciar sesión</p>
+                <button className="p-2 rounded-md" type="submit" style={{ backgroundColor: "var(--color-primary)" }}>
+                  <p className="text-l text-white" >Iniciar sesión</p>
                 </button>
                 <div className="mt-5 flex flex-col items-center">
                   <GoogleLogin
@@ -98,6 +99,10 @@ export default function Login() {
                         .then(data => {
                           if (data.token) {
                             localStorage.setItem('token', data.token);
+                            if (invitationToken) {
+                              navigate(`/invitation?token=${invitationToken}`);
+                              return;
+                            }
                             navigate('/select-company');
                           } else {
                             setError('Error al iniciar sesión con Google');

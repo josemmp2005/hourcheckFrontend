@@ -36,6 +36,12 @@ export default function SideBar() {
         "Profile": "/profile"
     };
 
+    const noRoleOptions = {
+        "Select Company": "/select-company",
+        "Info": "/info",
+        "Profile": "/profile"
+    }
+
     let sidebarOptions = {};
     if (role === "2") {
         sidebarOptions = adminOptions;
@@ -44,6 +50,8 @@ export default function SideBar() {
         sidebarOptions = managerOptions;
     } else if (role === "4") {
         sidebarOptions = userOptions;
+    } else {
+        sidebarOptions = noRoleOptions;
     }
 
     // Cierra el sidebar al hacer clic fuera

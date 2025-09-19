@@ -10,7 +10,8 @@ export default function AdminPanel() {
         "Permission Management": "/admin-panel/permission-management",
         "Audit Logs": "/admin-panel/audit-logs",
         "Company Settings": "/admin-panel/company-settings",
-        "Reports": "/admin-panel/reports"
+        "Reports": "/admin-panel/reports",
+        "Shifts Management": "/admin-panel/shifts-management"
     };
 
     return (

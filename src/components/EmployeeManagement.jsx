@@ -44,6 +44,7 @@ export default function EmployeeManagement() {
     };
 
     const employee = Array.isArray(employeeData) ? employeeData[0] : employeeData;
+    console.log(employee);
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -51,13 +52,23 @@ export default function EmployeeManagement() {
             <div className="container mx-auto p-4">
                 <h2 className="text-2xl font-bold mb-4">Gestión de Empleado</h2>
                 <form className="form flex flex-col items-center w-full" onSubmit={updateEmployee}>
+                    <img
+                        src={
+                            employee && employee.user && employee.user.photo_url
+                                ? employee.user.photo_url
+                                : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                        }
+                        alt={employee && employee.user ? employee.user.name : "Empleado"}
+                        className="w-24 h-24 rounded-full mb-4"
+                    />
+
                     <p className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none">
                         {employee && employee.user ? employee.user.name : "Cargando..."}
                     </p>
                     <p className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none">
                         {employee && employee.user ? employee.user.email : "Cargando..."}
                     </p>
-                    
+
                     {error && <p className="error text-red-500">{error}</p>}
                     <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Actualizar Empleado</button>
                 </form>
