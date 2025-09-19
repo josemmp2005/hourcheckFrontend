@@ -8,6 +8,8 @@ export default function EmployeesManagement() {
     const [employees, setEmployees] = useState([]);
     const [roles, setRoles] = useState({});
     const [workModes, setWorkModes] = useState({});
+    const [employeeShifts, setEmployeeShifts] = useState([]);
+    const [companyShifts, setCompanyShifts] = useState([]);
     const token = localStorage.getItem("token");
     const payload = JSON.parse(atob(token.split('.')[1]));
     const userId = payload.userId || payload.id || payload.sub;
@@ -75,10 +77,47 @@ export default function EmployeesManagement() {
         }
     };
 
+    const getEmployeesShifts = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/shifts/${companyId}/employees`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            if (!response.ok) throw new Error("Error fetching shifts");
+            const data = await response.json();
+            setEmployeeShifts(data["data"] || []);
+        } catch (error) {
+            console.error("Error fetching shifts:", error);
+        }
+    };
+
+    const getCompanyShifts = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/shifts/${companyId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            if (!response.ok) throw new Error("Error fetching company shifts");
+            const data = await response.json();
+            setCompanyShifts(data["data"] || []);
+        }
+        catch (error) {
+            console.error("Error fetching company shifts:", error);
+        }
+    };
+
     useEffect(() => {
         getEmployees();
         getRoles();
         getWorkModes();
+        getEmployeesShifts();
+        getCompanyShifts();
     }, []);
 
     return (
@@ -98,11 +137,19 @@ export default function EmployeesManagement() {
                                         navigate(`/admin-panel/employee-management?id=${emp.user.id}`);
                                     }}
                                 >
-                                    <img src={emp.user.image ? emp.user.image : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt={emp.user.name} className="w-24 h-24 rounded-full mb-4" />
+                                    <img src={emp.user.photo_url ? emp.user.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt={emp.user.name} className="w-24 h-24 rounded-full mb-4" />
                                     <p><strong>Nombre:</strong> {emp.user.name}</p>
                                     <p><strong>Email:</strong> {emp.user.email}</p>
                                     <p><strong>Rol:</strong> {roles[emp.role_id] || "Cargando..."}</p>
                                     <p><strong>Modalidad:</strong> {workModes[emp.work_mode_id] || "Cargando..."}</p>
+                                    <p>
+                                        <strong>Turno: </strong>
+                                            {(() => {
+                                                const idShift = employeeShifts.find(s => s.user_id === emp.user.id && !s.end_date)?.shift_id || "No asignado";
+                                                const shift = companyShifts.find(cs => cs.id === idShift);
+                                                return shift ? shift.name : "Sin turno asignado";
+                                            })()}
+                                    </p>
                                 </div>
                             ))
                     )}

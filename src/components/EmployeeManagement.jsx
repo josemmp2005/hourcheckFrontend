@@ -32,9 +32,10 @@ export default function EmployeeManagement() {
         }
     };
 
+
     useEffect(() => {
         getEmployeeData();
-        // eslint-disable-next-line
+
     }, []);
 
     // Placeholder para la función de actualización
@@ -68,6 +69,7 @@ export default function EmployeeManagement() {
                     <p className="input bg-none border-b-1 border-gray-300 p-2 text-sm focus:outline-none">
                         {employee && employee.user ? employee.user.email : "Cargando..."}
                     </p>
+
 
                     {error && <p className="error text-red-500">{error}</p>}
                     <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Actualizar Empleado</button>
