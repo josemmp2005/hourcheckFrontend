@@ -15,6 +15,7 @@ import ClockIn from "./components/ClockIn.jsx";
 import EmployeesManagement from "./components/EmployeesManagement.jsx";
 import EmployeeManagement from "./components/EmployeeManagement.jsx";
 import ShiftsManagements from "./components/SihftsManagements.jsx";
+import CompanySettings from "./components/CompanySettings.jsx";
 import Profile from "./components/Profile.jsx";
 
 export default function App() {
@@ -38,6 +39,7 @@ export default function App() {
         <Route path="/admin-panel/employees-management" element={<EmployeesManagement/>} />
         <Route path="/admin-panel/employee-management" element={<EmployeeManagement/>} />
         <Route path="/admin-panel/shifts-management" element={<ShiftsManagements/>} />
+        <Route path="/admin-panel/company-settings" element={<CompanySettings/>} />
         <Route path="/profile" element={<Profile/>} />
       </Routes>
     </BrowserRouter>

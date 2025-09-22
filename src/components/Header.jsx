@@ -70,7 +70,7 @@ export default function Header() {
         <img
           src={userData && userData.photo_url !==  null ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
           alt="User"
-          className="user-img w-12 h-12 rounded-full border-2 border-blue-400 shadow"
+          className="user-img w-12 h-12 rounded-full border-2 border-blue-400 shadow bg-white"
         />
       </div>
     </header>
