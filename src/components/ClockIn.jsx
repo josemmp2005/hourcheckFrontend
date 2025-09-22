@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import jsQR from "jsqr";
 
 export default function ClockIn() {
+    const workMode = localStorage.getItem("work_mode_id");
+
     const navigate = useNavigate();
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -57,31 +59,116 @@ export default function ClockIn() {
         return () => clearInterval(interval);
     }, [cameraOpen]);
 
+    if (workMode == "1") { // ESCANEO PRESENCIAL 
+        return (
+            <>
+                <Header />
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100">
+                    <div className="container mx-auto px-4 py-8">
+                        <div className="text-center mb-8">
+                            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+                                🕐 Clock In
+                            </h2>
+                            <p className="text-lg text-gray-600 mb-2">
+                                Escanea tu código QR para registrar tu entrada
+                            </p>
+                            <p className="text-sm text-gray-500">
+                                Alinea el código QR dentro del marco de la cámara
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col items-center">
+                            {!cameraOpen ? (
+                                <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+                                    <div className="mb-6">
+                                        <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                                            Activar Cámara
+                                        </h3>
+                                        <p className="text-gray-600 text-sm">
+                                            Presiona el botón para iniciar el escaneo
+                                        </p>
+                                    </div>
+                                    <button
+                                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 font-semibold"
+                                        onClick={handleOpenCamera}
+                                    >
+                                        📷 Abrir Cámara
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full">
+                                    <div className="text-center mb-4">
+                                        <h3 className="text-lg font-semibold text-gray-800">
+                                            🔍 Escaneando...
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Apunta la cámara hacia el código QR
+                                        </p>
+                                    </div>
+                                    <div className="relative">
+                                        <video
+                                            ref={videoRef}
+                                            autoPlay
+                                            className="w-full h-64 object-cover rounded-xl border-4 border-blue-200"
+                                        />
+                                        {/* Marco del QR */}
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-32 h-32 border-4 border-white border-dashed rounded-lg animate-pulse"></div>
+                                        </div>
+                                    </div>
+                                    <canvas ref={canvasRef} style={{ display: "none" }} />
+                                </div>
+                            )}
+
+                            {qrResult && (
+                                <div className="mt-6 bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border-l-4 border-green-500">
+                                    <div className="flex items-center">
+                                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-lg font-semibold text-gray-800">
+                                                ✅ QR Detectado
+                                            </h4>
+                                            <p className="text-sm text-gray-600 break-all">
+                                                <strong>Código:</strong> {qrResult}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
+    }
+
     return (
         <>
             <Header />
-            <div className="flex flex-col items-center mt-10">
-                <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition-colors mb-4"
-                    onClick={handleOpenCamera}
-                >
-                    Abrir cámara
-                </button>
-                {cameraOpen && (
-                    <>
-                        <video
-                            ref={videoRef}
-                            autoPlay
-                            className="rounded-lg border shadow-lg w-80 h-60"
-                        />
-                        <canvas ref={canvasRef} style={{ display: "none" }} />
-                    </>
-                )}
-                {qrResult && (
-                    <div className="mt-4 p-4 bg-green-100 rounded shadow text-green-800">
-                        <strong>QR detectado:</strong> {qrResult}
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-100 to-indigo-100 flex items-center justify-center">
+                <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
                     </div>
-                )}
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                        Modo de Trabajo No Disponible
+                    </h2>
+                    <p className="text-gray-600">
+                        El escaneo QR solo está disponible para trabajo presencial.
+                    </p>
+                </div>
             </div>
         </>
     );
