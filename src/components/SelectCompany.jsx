@@ -79,7 +79,7 @@ export default function SelectCompany() {
 
     const saveUserCompanyInfo = async (companyId) => {
         try {
-            const response = await fetch("http://localhost:3000/users/company/info", {
+            const response = await fetch(`${API_BASE_URL}/users/company/info`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
