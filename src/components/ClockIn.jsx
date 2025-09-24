@@ -34,13 +34,12 @@ export default function ClockIn() {
     const checkClockInStatus = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${API_BASE_URL}/clock/status`, {
+            const response = await fetch(`${API_BASE_URL}/clock/status/${companyId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ company_id: Number(companyId) })
+                }
             });
             if (!response.ok) {
                 throw new Error("Failed to fetch clock-in status");
