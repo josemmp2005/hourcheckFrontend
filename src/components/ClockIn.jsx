@@ -35,7 +35,7 @@ export default function ClockIn() {
         try {
             setIsLoading(true);
             const response = await fetch(`${API_BASE_URL}/clock/status`, {
-                method: "POST",
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
