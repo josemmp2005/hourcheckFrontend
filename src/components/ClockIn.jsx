@@ -59,7 +59,7 @@ export default function ClockIn() {
         return () => clearInterval(interval);
     }, [cameraOpen]);
 
-    if (workMode == "1") { // ESCANEO PRESENCIAL 
+    if (workMode == null) { // ESCANEO PRESENCIAL 
         return (
             <>
                 <Header />
@@ -115,7 +115,7 @@ export default function ClockIn() {
                                         <video
                                             ref={videoRef}
                                             autoPlay
-                                            className="w-full h-64 object-cover rounded-xl border-4 border-blue-200"
+                                            className="w-full rounded-xl border-4 border-blue-200"
                                         />
                                         {/* Marco del QR */}
                                         <div className="absolute inset-0 flex items-center justify-center">
