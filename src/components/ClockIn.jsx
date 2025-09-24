@@ -62,7 +62,7 @@ export default function ClockIn() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ code: qrCode, company_id: Number(companyId) })
+                body: JSON.stringify({ code: qrCode, company_id: Number(companyId), work_mode_id: Number(workMode) })
             });
             if (!response.ok) {
                 throw new Error("Código QR inválido o error en el servidor");
