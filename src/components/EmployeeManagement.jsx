@@ -1,5 +1,6 @@
 import Header from './Header';
 import { useEffect, useState } from 'react';
+import API_BASE_URL from '../config/api';
 
 export default function EmployeeManagement() {
     const url = new URL(window.location.href);
@@ -21,7 +22,7 @@ export default function EmployeeManagement() {
 
     const getEmployeeData = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/companies/employee/${employeeId}`, {
+            const response = await fetch(`${API_BASE_URL}/companies/employee/${employeeId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -43,7 +44,7 @@ export default function EmployeeManagement() {
 
     const getRoles = async () => {
         try {
-            const response = await fetch("http://localhost:3000/roles", {
+            const response = await fetch(`${API_BASE_URL}/roles`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -61,7 +62,7 @@ export default function EmployeeManagement() {
 
     const getWorkModes = async () => {
         try {
-            const response = await fetch("http://localhost:3000/work-modes", {
+            const response = await fetch(`${API_BASE_URL}/work-modes`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -79,7 +80,7 @@ export default function EmployeeManagement() {
 
     const getShifts = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/shifts/${companyId}`, {
+            const response = await fetch(`${API_BASE_URL}/shifts/${companyId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -98,7 +99,7 @@ export default function EmployeeManagement() {
 
     const getEmployeesShifts = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/shifts/${companyId}/employees`, {
+            const response = await fetch(`${API_BASE_URL}/shifts/${companyId}/employees`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

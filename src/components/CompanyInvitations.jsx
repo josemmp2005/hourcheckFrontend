@@ -1,6 +1,7 @@
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import API_BASE_URL from "../config/api.js";
 
 export default function CompanyInvitations() {
     const [error, setError] = useState("");
@@ -19,7 +20,7 @@ export default function CompanyInvitations() {
 
     const getRoles = async () => {
         try {
-            const response = await fetch("http://localhost:3000/roles", {
+            const response = await fetch(`${API_BASE_URL}/roles`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -37,7 +38,7 @@ export default function CompanyInvitations() {
 
     const getWorkModes = async () => {
         try {
-            const response = await fetch("http://localhost:3000/work-modes", {
+            const response = await fetch(`${API_BASE_URL}/work-modes`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -55,7 +56,7 @@ export default function CompanyInvitations() {
 
     const getShifts = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/shifts/${companyId}`, {
+            const response = await fetch(`${API_BASE_URL}/shifts/${companyId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -77,7 +78,7 @@ export default function CompanyInvitations() {
         setError("");
         try {
             const companyId = localStorage.getItem("company_id");
-            const response = await fetch("http://localhost:3000/company-invitations/generate-invitation", {
+            const response = await fetch(`${API_BASE_URL}/company-invitations/generate-invitation`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

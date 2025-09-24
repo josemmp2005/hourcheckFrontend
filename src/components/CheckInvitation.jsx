@@ -2,6 +2,7 @@ import Header from './Header.jsx'
 import { useEffect } from 'react';
 import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from "../config/api.js";
 
 export default function CheckInvitation() {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function CheckInvitation() {
         }
         const responseInvitation = async () => {
             try {
-                const response = await fetch("http://localhost:3000/company-invitations/check-invitation", {
+                const response = await fetch(`${API_BASE_URL}/company-invitations/check-invitation`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

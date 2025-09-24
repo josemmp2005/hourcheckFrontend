@@ -1,6 +1,7 @@
 import Header from './Header';
 import { useEffect, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
+import API_BASE_URL from '../config/api.js';
 
 const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const VITE_SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY;
@@ -18,7 +19,7 @@ export default function Profile() {
 
     const getUserData = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/users/info`, {
+            const response = await fetch(`${API_BASE_URL}/users/info`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -87,7 +88,7 @@ export default function Profile() {
         }
 
         try {
-            const response = await fetch("http://localhost:3000/users/update", {
+            const response = await fetch(`${API_BASE_URL}/users/update`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

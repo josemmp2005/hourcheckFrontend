@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import SideBar from "./SideBar.jsx";
 import { useEffect, useState } from "react";
+import API_BASE_URL from "../config/api.js";
 
 export default function Header() {
   const token = localStorage.getItem("token");
@@ -10,7 +11,7 @@ export default function Header() {
 
   const getUserData = async () => {
     try {
-      const userData = await fetch("http://localhost:3000/users/info", {
+      const userData = await fetch(`${API_BASE_URL}/users/info`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +35,7 @@ export default function Header() {
 
     const getCompanyData = async () => {
     try {
-      const companyData = await fetch("http://localhost:3000/companies/info", {
+      const companyData = await fetch(`${API_BASE_URL}/companies/info`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -18,7 +18,7 @@ export default function EmployeesManagement() {
     // Cargar empleados
     const getEmployees = async () => {
         try {
-            const response = await fetch("http://localhost:3000/companies/employees", {
+            const response = await fetch(`${API_BASE_URL}/companies/employees`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export default function EmployeesManagement() {
     // Cargar todos los roles de una vez
     const getRoles = async () => {
         try {
-            const response = await fetch("http://localhost:3000/roles", {
+            const response = await fetch(`${API_BASE_URL}/roles`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export default function EmployeesManagement() {
     // Cargar todos los work modes de una vez
     const getWorkModes = async () => {
         try {
-            const response = await fetch("http://localhost:3000/work-modes", {
+            const response = await fetch(`${API_BASE_URL}/work-modes`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export default function EmployeesManagement() {
 
     const getEmployeesShifts = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/shifts/${companyId}/employees`, {
+            const response = await fetch(`${API_BASE_URL}/shifts/${companyId}/employees`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export default function EmployeesManagement() {
 
     const getCompanyShifts = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/shifts/${companyId}`, {
+            const response = await fetch(`${API_BASE_URL}/shifts/${companyId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

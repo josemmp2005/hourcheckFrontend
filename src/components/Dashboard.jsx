@@ -2,6 +2,7 @@ import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
+import API_BASE_URL from '../config/api.js';
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ export default function Dashboard() {
     const getDailyCode = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch(`http://localhost:3000/daily-singing-code/${companyId}`, {
+            const response = await fetch(`${API_BASE_URL}/daily-singing-code/${companyId}`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,

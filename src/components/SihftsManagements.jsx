@@ -1,5 +1,6 @@
 import Header from "./Header.jsx";
 import { useState, useEffect } from "react";
+import API_BASE_URL from "../config/api.js";
 
 export default function ShiftsManagements() {
     const [shifts, setShifts] = useState([]);
@@ -11,7 +12,7 @@ export default function ShiftsManagements() {
 
     const getShifts = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/shifts/${companyId}`, {
+            const response = await fetch(`${API_BASE_URL}/shifts/${companyId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -44,7 +45,7 @@ export default function ShiftsManagements() {
         e.preventDefault();
         setError("");
         try {
-            const response = await fetch("http://localhost:3000/shifts", {
+            const response = await fetch(`${API_BASE_URL}/shifts`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

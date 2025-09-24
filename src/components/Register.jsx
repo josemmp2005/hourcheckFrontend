@@ -1,7 +1,7 @@
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import API_BASE_URL from "../config/api";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -21,7 +21,7 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/users/register", {
+        const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export default function Register() {
       const data = await response.json();
       alert("Registro correcto");
 
-      const dataLogin = await fetch("http://localhost:3000/users/login", {
+      const dataLogin = await fetch(`${API_BASE_URL}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

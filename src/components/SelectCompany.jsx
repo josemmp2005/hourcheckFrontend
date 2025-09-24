@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./Header.jsx";
 import logo from "../assets/logo.png";
+import API_BASE_URL from "../config/api.js";
 
 export default function SelectCompany() {
     localStorage.removeItem("company_id");
@@ -14,9 +15,9 @@ export default function SelectCompany() {
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem("token");
 
-    const getCompanmies = async () => {
+    const getCompanies = async () => {
         try {
-            const response = await fetch("http://localhost:3000/users/companies", {
+            const response = await fetch(`${API_BASE_URL}/users/companies`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -36,7 +37,7 @@ export default function SelectCompany() {
     };
 
     useEffect(() => {
-        getCompanmies();
+        getCompanies();
     }, []);
 
     if (loading) {

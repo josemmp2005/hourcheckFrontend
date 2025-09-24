@@ -2,10 +2,12 @@ import Header from "./Header";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import jsQR from "jsqr";
+import API_BASE_URL from "../config/api";
 
 export default function ClockIn() {
     const workMode = localStorage.getItem("work_mode_id");
-
+    const token = localStorage.getItem("token");
+    const companyId = localStorage.getItem("company_id");
     const navigate = useNavigate();
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -25,6 +27,28 @@ export default function ClockIn() {
             alert("No se pudo acceder a la cámara.");
         }
     };
+
+    const verifyQrCode = async (qrCode) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/clock/in`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ code: qrCode, company_id: Number(companyId) })
+            });
+            if (!response.ok) {
+                throw new Error("Código QR inválido o error en el servidor");
+            }
+            const data = await response.json();
+            alert("Entrada registrada correctamente a las " + data.timestamp);
+            navigate("/dashboard");
+        }
+        catch (error) {
+            alert(error.message);
+        }
+    }
 
     // Escanea el QR cada 500ms cuando la cámara está abierta
     useEffect(() => {
@@ -47,11 +71,13 @@ export default function ClockIn() {
                     if (code) {
                         setQrResult(code.data);
                         clearInterval(interval);
-                        // Opcional: detener la cámara después de leer el QR
+                        // Detener la cámara después de leer el QR
                         if (video.srcObject) {
                             video.srcObject.getTracks().forEach(track => track.stop());
                         }
                         setCameraOpen(false);
+                        // Ejecutar clock in automáticamente
+                        verifyQrCode(code.data);
                     }
                 }
             }, 500);
@@ -136,7 +162,7 @@ export default function ClockIn() {
                                         </div>
                                         <div>
                                             <h4 className="text-lg font-semibold text-gray-800">
-                                                ✅ QR Detectado
+                                                ✅ Procesando entrada...
                                             </h4>
                                             <p className="text-sm text-gray-600 break-all">
                                                 <strong>Código:</strong> {qrResult}
