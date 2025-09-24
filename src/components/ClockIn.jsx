@@ -5,6 +5,7 @@ import jsQR from "jsqr";
 import API_BASE_URL from "../config/api";
 
 export default function ClockIn() {
+    const clockInStatusChecked = useRef(false);
     const workMode = localStorage.getItem("work_mode_id");
     const token = localStorage.getItem("token");
     const companyId = localStorage.getItem("company_id");
@@ -13,6 +14,8 @@ export default function ClockIn() {
     const canvasRef = useRef(null);
     const [cameraOpen, setCameraOpen] = useState(false);
     const [qrResult, setQrResult] = useState("");
+    const [clockStatus, setClockStatus] = useState(null); // null, 'in', 'out'
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleOpenCamera = async () => {
         try {
@@ -28,7 +31,31 @@ export default function ClockIn() {
         }
     };
 
-    const verifyQrCode = async (qrCode) => {
+    const checkClockInStatus = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`${API_BASE_URL}/clock/status`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ company_id: Number(companyId) })
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch clock-in status");
+            }
+            const data = await response.json();
+            setClockStatus(data.clocked_in ? 'out' : 'in');
+            setIsLoading(false);
+            clockInStatusChecked.current = true;
+        } catch (error) {
+            alert(error.message);
+            navigate("/dashboard");
+        }
+    }
+
+    const clockIn = async (qrCode) => {
         try {
             const response = await fetch(`${API_BASE_URL}/clock/in`, {
                 method: "POST",
@@ -44,11 +71,50 @@ export default function ClockIn() {
             const data = await response.json();
             alert("Entrada registrada correctamente a las " + data.timestamp);
             navigate("/dashboard");
-        }
-        catch (error) {
+        } catch (error) {
             alert(error.message);
         }
     }
+
+    const clockOut = async (qrCode) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/clock/out`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ code: qrCode, company_id: Number(companyId) })
+            });
+            if (!response.ok) {
+                throw new Error("Código QR inválido o error en el servidor");
+            }
+            const data = await response.json();
+            alert("Salida registrada correctamente a las " + data.timestamp);
+            navigate("/dashboard");
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    const verifyQrCode = async (qrCode) => {
+        if (!clockInStatusChecked.current) {
+            await checkClockInStatus();
+        }
+        
+        if (clockStatus === 'in') {
+            await clockIn(qrCode);
+        } else if (clockStatus === 'out') {
+            await clockOut(qrCode);
+        }
+    }
+
+    // Verificar estado al cargar el componente
+    useEffect(() => {
+        if (workMode == "1") {
+            checkClockInStatus();
+        }
+    }, []);
 
     // Escanea el QR cada 500ms cuando la cámara está abierta
     useEffect(() => {
@@ -76,16 +142,30 @@ export default function ClockIn() {
                             video.srcObject.getTracks().forEach(track => track.stop());
                         }
                         setCameraOpen(false);
-                        // Ejecutar clock in automáticamente
+                        // Ejecutar clock in/out automáticamente
                         verifyQrCode(code.data);
                     }
                 }
             }, 500);
         }
         return () => clearInterval(interval);
-    }, [cameraOpen]);
+    }, [cameraOpen, clockStatus]);
 
-    if (workMode == null) { // ESCANEO PRESENCIAL 
+    if (workMode == "1") { // ESCANEO PRESENCIAL 
+        if (isLoading) {
+            return (
+                <>
+                    <Header />
+                    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 flex items-center justify-center">
+                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+                            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                            <p className="text-gray-600">Verificando estado...</p>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+
         return (
             <>
                 <Header />
@@ -93,10 +173,13 @@ export default function ClockIn() {
                     <div className="container mx-auto px-4 py-8">
                         <div className="text-center mb-8">
                             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                                🕐 Clock In
+                                {clockStatus === 'in' ? '🕐 Clock In' : '🕕 Clock Out'}
                             </h2>
                             <p className="text-lg text-gray-600 mb-2">
-                                Escanea tu código QR para registrar tu entrada
+                                {clockStatus === 'in' 
+                                    ? 'Escanea tu código QR para registrar tu entrada'
+                                    : 'Escanea tu código QR para registrar tu salida'
+                                }
                             </p>
                             <p className="text-sm text-gray-500">
                                 Alinea el código QR dentro del marco de la cámara
@@ -107,21 +190,24 @@ export default function ClockIn() {
                             {!cameraOpen ? (
                                 <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
                                     <div className="mb-6">
-                                        <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className={`w-24 h-24 ${clockStatus === 'in' ? 'bg-green-100' : 'bg-red-100'} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                                            <svg className={`w-12 h-12 ${clockStatus === 'in' ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
                                         </div>
                                         <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                                            Activar Cámara
+                                            {clockStatus === 'in' ? 'Registrar Entrada' : 'Registrar Salida'}
                                         </h3>
                                         <p className="text-gray-600 text-sm">
                                             Presiona el botón para iniciar el escaneo
                                         </p>
                                     </div>
                                     <button
-                                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 font-semibold"
+                                        className={`w-full ${clockStatus === 'in' 
+                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' 
+                                            : 'bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700'
+                                        } text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold`}
                                         onClick={handleOpenCamera}
                                     >
                                         📷 Abrir Cámara
@@ -153,16 +239,16 @@ export default function ClockIn() {
                             )}
 
                             {qrResult && (
-                                <div className="mt-6 bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border-l-4 border-green-500">
+                                <div className={`mt-6 bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border-l-4 ${clockStatus === 'in' ? 'border-green-500' : 'border-red-500'}`}>
                                     <div className="flex items-center">
-                                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div className={`w-12 h-12 ${clockStatus === 'in' ? 'bg-green-100' : 'bg-red-100'} rounded-full flex items-center justify-center mr-4`}>
+                                            <svg className={`w-6 h-6 ${clockStatus === 'in' ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                             </svg>
                                         </div>
                                         <div>
                                             <h4 className="text-lg font-semibold text-gray-800">
-                                                ✅ Procesando entrada...
+                                                {clockStatus === 'in' ? '✅ Procesando entrada...' : '🔴 Procesando salida...'}
                                             </h4>
                                             <p className="text-sm text-gray-600 break-all">
                                                 <strong>Código:</strong> {qrResult}
