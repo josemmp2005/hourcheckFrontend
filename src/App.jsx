@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 import Register from './components/Register.jsx'
@@ -17,6 +17,7 @@ import EmployeeManagement from "./components/EmployeeManagement.jsx";
 import ShiftsManagements from "./components/SihftsManagements.jsx";
 import CompanySettings from "./components/CompanySettings.jsx";
 import Profile from "./components/Profile.jsx";
+import Break from "./components/Break.jsx";
 
 export default function App() {
 
@@ -36,11 +37,12 @@ export default function App() {
         <Route path="/admin-panel/company-invitations" element={<CompanyInvitations />} />
         <Route path="/invitation" element={<CheckInvitation />} />
         <Route path="/clock-in" element={<ClockIn />} />
-        <Route path="/admin-panel/employees-management" element={<EmployeesManagement/>} />
-        <Route path="/admin-panel/employee-management" element={<EmployeeManagement/>} />
-        <Route path="/admin-panel/shifts-management" element={<ShiftsManagements/>} />
-        <Route path="/admin-panel/company-settings" element={<CompanySettings/>} />
-        <Route path="/profile" element={<Profile/>} />
+        <Route path="/admin-panel/employees-management" element={<EmployeesManagement />} />
+        <Route path="/admin-panel/employee-management" element={<EmployeeManagement />} />
+        <Route path="/admin-panel/shifts-management" element={<ShiftsManagements />} />
+        <Route path="/admin-panel/company-settings" element={<CompanySettings />} />
+        <Route path="/break" element={<Break />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   )

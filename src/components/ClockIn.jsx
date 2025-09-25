@@ -14,23 +14,38 @@ export default function ClockIn() {
     const canvasRef = useRef(null);
     const [cameraOpen, setCameraOpen] = useState(false);
     const [qrResult, setQrResult] = useState("");
-    const [clockStatus, setClockStatus] = useState(null); // null, 'in', 'out'
+    const [clockStatus, setClockStatus] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [streamReady, setStreamReady] = useState(null); 
 
+
+    // Función que maneja la apertura de la cámara
     const handleOpenCamera = async () => {
         try {
+            // Solicitar acceso a la cámara trasera del dispositivo si es posible
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: "environment" }
             });
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-            }
+
+            // Guardar el stream y mostrar la cámara
+            setStreamReady(stream);
             setCameraOpen(true);
         } catch (err) {
             alert("No se pudo acceder a la cámara.");
         }
     };
 
+    // Nuevo useEffect para asignar el stream cuando el video esté listo y la cámara esté abiertaq
+    useEffect(() => {
+        if (cameraOpen && streamReady && videoRef.current) {
+            videoRef.current.srcObject = streamReady;
+            videoRef.current.play().catch(err => {
+                console.error("Error al reproducir el video:", err);
+            });
+        }
+    }, [cameraOpen, streamReady]);
+
+    // Función para verificar el estado de clock-in del usuario para saber si debe hacer clock-in o clock-out dependiendo de su estado actual
     const checkClockInStatus = async () => {
         try {
             setIsLoading(true);
@@ -45,7 +60,8 @@ export default function ClockIn() {
                 throw new Error("Failed to fetch clock-in status");
             }
             const data = await response.json();
-            setClockStatus(data.clocked_in ? 'out' : 'in');
+            // Si está clockeado, el siguiente paso es hacer clock-out, y viceversa
+            setClockStatus(data.clockedIn ? 'out' : 'in');
             setIsLoading(false);
             clockInStatusChecked.current = true;
         } catch (error) {
@@ -54,6 +70,7 @@ export default function ClockIn() {
         }
     }
 
+    // Funcion para hacer clock-in, enviando el código QR al backend
     const clockIn = async (qrCode) => {
         try {
             const response = await fetch(`${API_BASE_URL}/clock/in`, {
@@ -68,13 +85,15 @@ export default function ClockIn() {
                 throw new Error("Código QR inválido o error en el servidor");
             }
             const data = await response.json();
-            alert("Entrada registrada correctamente a las " + data.timestamp);
+
+            alert("Entrada registrada correctamente a las " + data.message);
             navigate("/dashboard");
         } catch (error) {
             alert(error.message);
         }
     }
 
+    // Funcion para hacer clock-out
     const clockOut = async (qrCode) => {
         try {
             const response = await fetch(`${API_BASE_URL}/clock/out`, {
@@ -96,11 +115,11 @@ export default function ClockIn() {
         }
     }
 
+    // Función para verificar el código QR y decidir si hacer clock-in o clock-out
     const verifyQrCode = async (qrCode) => {
         if (!clockInStatusChecked.current) {
             await checkClockInStatus();
         }
-        
         if (clockStatus === 'in') {
             await clockIn(qrCode);
         } else if (clockStatus === 'out') {

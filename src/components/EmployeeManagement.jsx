@@ -1,6 +1,6 @@
 import Header from './Header';
 import { useEffect, useState } from 'react';
-import API_BASE_URL from '../config/api';
+import API_BASE_URL from '../config/api.js';
 
 export default function EmployeeManagement() {
     const url = new URL(window.location.href);

@@ -13,6 +13,7 @@ export default function SideBar() {
         "Info": "/info",
         "Admin Panel": "/admin-panel",
         "Select Company": "/select-company",
+        "Dashboard": "/dashboard",
         "Profile": "/profile"
     };
     const managerOptions = {
@@ -23,6 +24,7 @@ export default function SideBar() {
         "Info": "/info",
         "Manager Panel": "/manager",
         "Select Company": "/select-company",
+        "Dashboard": "/dashboard",
         "Profile": "/profile"
 
     };
@@ -33,6 +35,7 @@ export default function SideBar() {
         "Vacations": "/vacations",
         "Info": "/info",
         "Select Company": "/select-company",
+        "Dashboard": "/dashboard",
         "Profile": "/profile"
     };
 
