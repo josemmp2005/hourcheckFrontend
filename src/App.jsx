@@ -17,6 +17,9 @@ import EmployeeManagement from "./components/EmployeeManagement.jsx";
 import ShiftsManagements from "./components/SihftsManagements.jsx";
 import CompanySettings from "./components/CompanySettings.jsx";
 import Profile from "./components/Profile.jsx";
+import Vacations from "./components/Vacations.jsx";
+import Absences from "./components/Absences.jsx";
+import Info from "./components/Info.jsx";
 import Break from "./components/Break.jsx";
 
 export default function App() {
@@ -41,8 +44,11 @@ export default function App() {
         <Route path="/admin-panel/employee-management" element={<EmployeeManagement />} />
         <Route path="/admin-panel/shifts-management" element={<ShiftsManagements />} />
         <Route path="/admin-panel/company-settings" element={<CompanySettings />} />
+        <Route path="/info" element={<Info />} />
         <Route path="/break" element={<Break />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/vacations" element={<Vacations />} />
+        <Route path="/absences" element={<Absences />} /> 
       </Routes>
     </BrowserRouter>
   )
