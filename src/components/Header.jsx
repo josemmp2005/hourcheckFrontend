@@ -56,14 +56,12 @@ export default function Header() {
   useEffect(() => {
     getCompanyData();
   }, []);
-  // console.log(companyId);
-  // console.log("Company Data:", companyData);
 
   return (
-    <header className="header flex justify-between items-center px-6 py-4 shadow-lg" style={{ backgroundColor: "var(--color-primary)"} }>
+    <header className="header flex justify-between items-center px-6 py-4 shadow-lg">
       <SideBar />
       <div className="header-title">
-        <Link to="/" className="text-white text-2xl font-bold tracking-wide hover:text-blue-400 transition">
+        <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
           {companyData ? companyData.name : "HourCheck"}
         </Link>
       </div>

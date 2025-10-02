@@ -14,8 +14,6 @@ export default function CreateCompany() {
     const handleCreateCompany = async (e) => {
         e.preventDefault();
         setError("");
-
-
     }
 
 

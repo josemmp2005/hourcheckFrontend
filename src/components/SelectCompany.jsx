@@ -7,13 +7,14 @@ import API_BASE_URL from "../config/api.js";
 export default function SelectCompany() {
     localStorage.removeItem("company_id");
     localStorage.removeItem("work_mode_id");
-    // NO borres el role_id aquí
 
     const navigate = useNavigate();
     const [companies, setCompanies] = useState([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem("token");
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload.userId || payload.id || payload.sub;
 
     const getCompanies = async () => {
         try {
@@ -36,6 +37,8 @@ export default function SelectCompany() {
         }
     };
 
+
+
     useEffect(() => {
         getCompanies();
     }, []);
@@ -45,7 +48,7 @@ export default function SelectCompany() {
             <>
                 <Header />
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
-                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6" style={{ borderColor: "var(--color-secondary)"}}></div>
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6" style={{ borderColor: "var(--color-secondary)" }}></div>
                     <span className="font-semibold text-lg" style={{ color: "var(--color-secondary)" }}>Cargando empresas...</span>
                 </div>
             </>
@@ -114,15 +117,14 @@ export default function SelectCompany() {
                             navigate(`/dashboard`);
                         }}
                     >
-                        <img
-                            src={item.company.photo_url !== "none" ? item.company.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-                            alt={item.company.name}
-                            className="w-20 h-20 rounded-full border-2 mb-4 object-cover"
-                        />
-                        <h2 className="text-lg font-bold mb-2 text-gray-800">{item.company.name}</h2>
-                        <p className="text-gray-600 mb-1">{item.company.address}</p>
-                        <p className="text-gray-600 mb-1">{item.company.email}</p>
-                        <p className="text-gray-600 mb-1">{item.company.phone}</p>
+                        <div className="flex mb-4 justify-between w-full">
+                            <h2 className="text-lg font-bold mb-2 text-gray-800">{item.company.name}</h2>
+                            <img
+                                src={item.company.photo_url !== "none" ? item.company.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                                alt={item.company.name}
+                                className="w-15 h-15 rounded-full border-2 mb-4 object-cover"
+                            />
+                        </div>
                     </div>
                 ))}
             </div>
