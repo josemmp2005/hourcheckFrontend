@@ -92,9 +92,9 @@ export default function Dashboard() {
     // QR Generator for role 5
     if (role === "5") {
         return (
-            <>
+        <section className="lg:flex min-h-screen">
                 <Header />
-                <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+                <div className="h-100 flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 lg:w-full" >
                     <div className="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center max-w-md w-full">
                         <h2 className="text-3xl font-bold text-blue-700 mb-8 text-center">
                             📱 Código QR Diario
@@ -124,16 +124,15 @@ export default function Dashboard() {
                         )}
                     </div>
                 </div>
-            </>
+            </section>
         );
     }
 
     if (dashboardOptions) {
         return (
-            <>
+        <section className="lg:flex min-h-screen">
                 <Header />
-                <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
-                    <div className="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center max-w-lg w-full">
+            <div className="w-full">
                         <h1 className="text-3xl font-bold text-blue-700 mb-8">Dashboard</h1>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                             {Object.entries(dashboardOptions).map(([label, path]) => (
@@ -147,8 +146,7 @@ export default function Dashboard() {
                             ))}
                         </div>
                     </div>
-                </div>
-            </>
+            </section>
         );
     }
 }

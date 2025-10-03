@@ -58,14 +58,14 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="header flex justify-between items-center px-6 py-4 shadow-lg">
+    <header className="header bg-primary flex justify-between items-center px-6 py-4 lg:px-0 lg:py-0 shadow-md border bg-white border-b border-gray-200">
       <SideBar />
-      <div className="header-title">
+      <div className="header-title lg:hidden">
         <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
           {companyData ? companyData.name : "HourCheck"}
         </Link>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 lg:hidden">
         <img
           src={userData && userData.photo_url !==  null ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
           alt="User"

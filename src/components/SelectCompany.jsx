@@ -102,32 +102,34 @@ export default function SelectCompany() {
     };
 
     return (
-        <>
+        <section className="lg:flex min-h-screen bg-gray-100">
             <Header />
-            <div className="text-center font-bold text-2xl mt-8 mb-6">Selecciona una empresa</div>
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center px-4">
-                {companies.map((item) => (
-                    <div
-                        className="company-card bg-white border border-gray-300 shadow-lg p-6 rounded-xl max-w-xs w-full cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-200 flex flex-col items-center"
-                        key={item.company.id}
-                        onClick={() => {
-                            localStorage.setItem("company_id", item.company.id);
-                            saveUserCompanyInfo(item.company.id)
-                            navigate(`/dashboard`);
-                        }}
-                    >
-                        <div className="flex mb-4 justify-between w-full">
-                            <h2 className="text-lg font-bold mb-2 text-gray-800">{item.company.name}</h2>
-                            <img
-                                src={item.company.photo_url !== "none" ? item.company.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-                                alt={item.company.name}
-                                className="w-15 h-15 rounded-full border-2 mb-4 object-cover"
-                            />
+            <div className="w-full lg:ml-64 p-6">
+                <h2 className="text-center font-bold text-2xl mt-8 mb-6">Selecciona una empresa</h2>
+                {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+                <div className="flex flex-wrap gap-6 px-4 m-10 justify-center ">
+                    {companies.map((item) => (
+                        <div
+                            className="company-card bg-white border border-r-secondary border-b-secondary border-l-0 border-t-0 p-6 rounded-xl max-w-xs w-full cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-200 flex flex-col items-center"
+                            key={item.company.id}
+                            onClick={() => {
+                                localStorage.setItem("company_id", item.company.id);
+                                saveUserCompanyInfo(item.company.id)
+                                navigate(`/dashboard`);
+                            }}
+                        >
+                            <div className="flex mb-4 justify-between w-full">
+                                <h2 className="text-lg font-bold mb-2 text-gray-800">{item.company.name}</h2>
+                                <img
+                                    src={item.company.photo_url !== "none" ? item.company.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                                    alt={item.company.name}
+                                    className="w-15 h-15 rounded- mb-4 object-cover"
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </>
+        </section>
     );
 }
