@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 import API_BASE_URL from '../config/api.js';
+import Toolbar from './Toolbar.jsx';
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -10,40 +11,6 @@ export default function Dashboard() {
     const companyId = localStorage.getItem("company_id");
     const [qrCodeUrl, setQrCodeUrl] = useState("");
     const [dailyCode, setDailyCode] = useState("");
-
-    const adminOptions = {
-        "Clock In": "/clock-in",
-        "Break": "/break",
-        "Absences": "/absences",
-        "Vacations": "/vacations",
-        "Info": "/info",
-        "Admin Panel": "/admin-panel"
-    };
-    const managerOptions = {
-        "Clock In": "/clock-in",
-        "Break": "/break",
-        "Absences": "/absences",
-        "Vacations": "/vacations",
-        "Info": "/info",
-        "Manager Panel": "/manager"
-    };
-    const userOptions = {
-        "Clock In": "/clock-in",
-        "Break": "/break",
-        "Absences": "/absences",
-        "Vacations": "/vacations",
-        "Info": "/info"
-    };
-
-    let dashboardOptions = {};
-
-    if (role === "2") {
-        dashboardOptions = adminOptions;
-    } else if (role === "3") {
-        dashboardOptions = managerOptions;
-    } else if (role === "4") {
-        dashboardOptions = userOptions;
-    }
 
     const getDailyCode = async () => {
         try {
@@ -92,20 +59,20 @@ export default function Dashboard() {
     // QR Generator for role 5
     if (role === "5") {
         return (
-        <section className="lg:flex min-h-screen">
+            <section className="lg:flex min-h-screen">
                 <Header />
                 <div className="h-100 flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 lg:w-full" >
                     <div className="bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center max-w-md w-full">
                         <h2 className="text-3xl font-bold text-blue-700 mb-8 text-center">
                             📱 Código QR Diario
                         </h2>
-                        
+
                         {qrCodeUrl ? (
                             <div className="text-center">
                                 <div className="bg-white p-4 rounded-xl shadow-lg mb-6">
-                                    <img 
-                                        src={qrCodeUrl} 
-                                        alt="QR Code" 
+                                    <img
+                                        src={qrCodeUrl}
+                                        alt="QR Code"
                                         className="w-64 h-64 mx-auto"
                                     />
                                 </div>
@@ -128,25 +95,13 @@ export default function Dashboard() {
         );
     }
 
-    if (dashboardOptions) {
-        return (
+
+    return (
         <section className="lg:flex min-h-screen">
-                <Header />
-            <div className="w-full">
-                        <h1 className="text-3xl font-bold text-blue-700 mb-8">Dashboard</h1>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                            {Object.entries(dashboardOptions).map(([label, path]) => (
-                                <button
-                                    key={label}
-                                    onClick={() => navigate(path)}
-                                    className="bg-blue-500 text-white py-3 rounded-xl shadow hover:bg-blue-600 transition-colors w-full text-center font-semibold"
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-            </section>
-        );
-    }
+            <Header />
+            <h1 className="text-3xl font-bold text-blue-700 mb-8">Dashboard</h1>
+            <Toolbar />
+        </section>
+    );
 }
+    

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import SideBar from "./SideBar.jsx";
 import { useEffect, useState } from "react";
 import API_BASE_URL from "../config/api.js";
+import logo from "../assets/logo.png";
 
 export default function Header() {
   const token = localStorage.getItem("token");
@@ -33,7 +34,7 @@ export default function Header() {
     getUserData();
   }, []);
 
-    const getCompanyData = async () => {
+  const getCompanyData = async () => {
     try {
       const companyData = await fetch(`${API_BASE_URL}/companies/info`, {
         method: "POST",
@@ -58,20 +59,16 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="header bg-primary flex justify-between items-center px-6 py-4 lg:px-0 lg:py-0 shadow-md border bg-white border-b border-gray-200">
+    <header className="header bg-primary flex justify-between items-center px-2 py-2 lg:px-0 lg:py-0 shadow-md border bg-white border-b border-gray-200">
       <SideBar />
-      <div className="header-title lg:hidden">
-        <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
-          {companyData ? companyData.name : "HourCheck"}
-        </Link>
-      </div>
-      <div className="flex items-center gap-2 lg:hidden">
-        <img
-          src={userData && userData.photo_url !==  null ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-          alt="User"
-          className="user-img w-12 h-12 rounded-full border-2 border-blue-400 shadow bg-white"
-        />
-      </div>
+      <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
+        {companyData ? companyData.name : "HourCheck"}
+      </Link>
+      <img
+        src={companyData && companyData.photo_url !== null ? companyData.photo_url : logo}
+        alt="User"
+        className="w-12 h-12 object-cover"
+      />
     </header>
   );
 }

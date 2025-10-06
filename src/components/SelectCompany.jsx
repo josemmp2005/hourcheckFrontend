@@ -6,6 +6,7 @@ import API_BASE_URL from "../config/api.js";
 
 export default function SelectCompany() {
     localStorage.removeItem("company_id");
+    localStorage.removeItem("role_id");
     localStorage.removeItem("work_mode_id");
 
     const navigate = useNavigate();
@@ -105,7 +106,7 @@ export default function SelectCompany() {
         <section className="lg:flex min-h-screen bg-gray-100">
             <Header />
             <div className="w-full lg:ml-64 p-6">
-                <h2 className="text-center font-bold text-2xl mt-8 mb-6">Selecciona una empresa</h2>
+                <h2 className="text-center font-bold text-2xl mt-8 mb-6">Mis empresa</h2>
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                 <div className="flex flex-wrap gap-6 px-4 m-10 justify-center ">
                     {companies.map((item) => (

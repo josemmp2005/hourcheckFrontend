@@ -1,4 +1,5 @@
 import Header from "./Header";
+import Toolbar from "./Toolbar";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import jsQR from "jsqr";
@@ -180,6 +181,7 @@ export default function ClockIn() {
                             <p className="text-gray-600">Verificando estado...</p>
                         </div>
                     </div>
+                    <Toolbar />
                 </>
             );
         }
@@ -278,6 +280,7 @@ export default function ClockIn() {
                         </div>
                     </div>
                 </div>
+                <Toolbar />
             </>
         )
     }

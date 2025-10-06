@@ -1,16 +1,25 @@
 import { Link } from "react-router-dom";
 import React, { useState, useRef } from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../config/api.js";
+import logo from "../assets/logo.png";
+import homeIcon from '../assets/home-icon.svg';
+import timerIcon from '../assets/timer-icon.svg';
+import companiesIcon from '../assets/companies-icon.svg';
+import breakIcon from '../assets/break-icon.svg';
 
 
 export default function SideBar() {
     const [visible, setVisible] = useState(false);
     const sidebarRef = useRef(null);
+    const navigate = useNavigate();
     const role = localStorage.getItem("role_id");
     const token = localStorage.getItem("token");
     const companyId = localStorage.getItem("company_id");
     const [companyData, setCompanyData] = useState(null);
+    const [userData, setUserData] = useState(null);
+
 
     const getCompanyData = async () => {
         try {
@@ -32,52 +41,74 @@ export default function SideBar() {
         }
     }
 
+    const getUserData = async () => {
+        try {
+            const userData = await fetch(`${API_BASE_URL}/users/info`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            if (!userData.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+            const data = await userData.json();
+            // console.log(data);
+            setUserData(data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+
     useEffect(() => {
         getCompanyData();
+        getUserData();
     }, []);
 
+    console.log(userData)
 
 
-    const adminOptions = {
-        "Clock In": "/clock-in",
-        "Break": "/break",
-        "Absences": "/absences",
-        "Vacations": "/vacations",
-        "Info": "/info",
-        "Admin Panel": "/admin-panel",
-        "Select Company": "/select-company",
-        "Dashboard": "/dashboard",
-        "Profile": "/profile"
-    };
+    const adminOptions = [
+        { name: "Clock In", path: "/clock-in", icon:  timerIcon  },
+        { name: "Break", path: "/break", icon:  breakIcon  },
+        { name: "Absences", path: "/absences", icon:  companiesIcon  },
+        { name: "Vacations", path: "/vacations", icon:  companiesIcon  },
+        { name: "Info", path: "/info", icon:  companiesIcon  },
+        { name: "Admin Panel", path: "/admin-panel", icon:  companiesIcon  },
+        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
+        { name: "Dashboard", path: "/dashboard", icon:  companiesIcon  },
+        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+    ];
 
-    const managerOptions = {
-        "Clock In": "/clock-in",
-        "Break": "/break",
-        "Absences": "/absences",
-        "Vacations": "/vacations",
-        "Info": "/info",
-        "Manager Panel": "/manager",
-        "Select Company": "/select-company",
-        "Dashboard": "/dashboard",
-        "Profile": "/profile"
-    };
+    const managerOptions = [
+        { name: "Clock In", path: "/clock-in", icon:  timerIcon  },
+        { name: "Break", path: "/break", icon:  breakIcon  },
+        { name: "Absences", path: "/absences", icon:  companiesIcon  },
+        { name: "Vacations", path: "/vacations", icon:  companiesIcon  },
+        { name: "Info", path: "/info", icon:  companiesIcon  },
+        { name: "Manager Panel", path: "/manager", icon:  companiesIcon  },
+        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
+        { name: "Dashboard", path: "/dashboard", icon:  companiesIcon  },
+        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+    ];
 
-    const userOptions = {
-        "Clock In": "/clock-in",
-        "Break": "/break",
-        "Absences": "/absences",
-        "Vacations": "/vacations",
-        "Info": "/info",
-        "Select Company": "/select-company",
-        "Dashboard": "/dashboard",
-        "Profile": "/profile"
-    };
+    const userOptions = [
+        { name: "Clock In", path: "/clock-in", icon:  timerIcon  },
+        { name: "Break", path: "/break", icon:  breakIcon  },
+        { name: "Absences", path: "/absences", icon:  breakIcon  },
+        { name: "Vacations", path: "/vacations", icon:  companiesIcon  },
+        { name: "Info", path: "/info", icon:  companiesIcon  },
+        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
+        { name: "Dashboard", path: "/dashboard", icon:  companiesIcon  },
+        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+    ];
 
-    const noRoleOptions = {
-        "Select Company": "/select-company",
-        "Info": "/info",
-        "Profile": "/profile"
-    }
+    const noRoleOptions = [
+        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
+        { name: "Info", path: "/info", icon:  companiesIcon  },
+        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+    ];
 
     let sidebarOptions = {};
     if (role === "2") {
@@ -129,18 +160,18 @@ export default function SideBar() {
                 <div className="sidebar-header mb-8 mt-4">
                     <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
                         {companyData ? companyData.name : "HourCheck"}
-                    </Link> 
+                    </Link>
                 </div>
 
                 <nav className="flex flex-col gap-4 flex-1">
-                    {Object.entries(sidebarOptions).map(([name, path]) => (
-                        <Link
-                            key={name}
-                            to={path}
-                            className="hover:bg-gray-700 p-3 rounded transition text-gray-200 hover:text-white"
+                    {sidebarOptions.map((option) => (
+                        <div
+                            className="hover:bg-secondary p-3 rounded transition hover:text-white flex items-center gap-4"
+                            onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            {name}
-                        </Link>
+                            <img src={option.icon} alt="" />
+                            <p>{option.name}</p>
+                        </div>
                     ))}
                 </nav>
 
@@ -164,25 +195,26 @@ export default function SideBar() {
                     className="absolute top-4 right-4 text-white text-xl bg-primary rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-600 transition"
                     onClick={() => setVisible(false)}
                 >
-                    ×
+                    <p className="mb-1">x</p>
                 </button>
 
-                <div className="sidebar-header mb-8 mt-8">
-                    <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
-                        {companyData ? companyData.name : "HourCheck"}
-                    </Link>
+                <div className="sidebar-header mb-3 mt-8 border-b border-gray-300 pb-4 flex items-center gap-3" onClick={() => navigate("/profile")}>
+                    <img src={userData ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="" className="w-10 h-10 rounded-full shadow bg-white" />
+                    <h2 to="/profile" className="text-xl font-bold tracking-wide hover:text-blue-400 transition">
+                        {userData ? userData.name : "HourCheck"}
+                    </h2>
                 </div>
 
                 <nav className="flex flex-col gap-4 flex-1">
-                    {Object.entries(sidebarOptions).map(([name, path]) => (
-                        <Link
-                            key={name}
-                            to={path}
-                            className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white"
-                            onClick={() => setVisible(false)} // Cierra el sidebar al hacer click
+
+                    {sidebarOptions.map((option) => (
+                        <div
+                            className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white flex items-center gap-4"
+                            onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            {name}
-                        </Link>
+                            <img src={option.icon} alt="" />
+                            <p>{option.name}</p>
+                        </div>
                     ))}
                 </nav>
 
