@@ -70,44 +70,44 @@ export default function SideBar() {
 
 
     const adminOptions = [
-        { name: "Clock In", path: "/clock-in", icon:  timerIcon  },
-        { name: "Break", path: "/break", icon:  breakIcon  },
-        { name: "Absences", path: "/absences", icon:  companiesIcon  },
-        { name: "Vacations", path: "/vacations", icon:  companiesIcon  },
-        { name: "Info", path: "/info", icon:  companiesIcon  },
-        { name: "Admin Panel", path: "/admin-panel", icon:  companiesIcon  },
-        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
-        { name: "Dashboard", path: "/dashboard", icon:  companiesIcon  },
-        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+        { id: 1, name: "Clock In", path: "/clock-in", icon: timerIcon },
+        { id: 2, name: "Break", path: "/break", icon: breakIcon },
+        { id: 3, name: "Absences", path: "/absences", icon: companiesIcon },
+        { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
+        { id: 5, name: "Info", path: "/info", icon: companiesIcon },
+        { id: 6, name: "Admin Panel", path: "/admin-panel", icon: companiesIcon },
+        { id: 7, name: "Select Company", path: "/select-company", icon: companiesIcon },
+        { id: 8, name: "Dashboard", path: "/dashboard", icon: companiesIcon },
+        { id: 9, name: "Profile", path: "/profile", icon: companiesIcon }
     ];
 
     const managerOptions = [
-        { name: "Clock In", path: "/clock-in", icon:  timerIcon  },
-        { name: "Break", path: "/break", icon:  breakIcon  },
-        { name: "Absences", path: "/absences", icon:  companiesIcon  },
-        { name: "Vacations", path: "/vacations", icon:  companiesIcon  },
-        { name: "Info", path: "/info", icon:  companiesIcon  },
-        { name: "Manager Panel", path: "/manager", icon:  companiesIcon  },
-        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
-        { name: "Dashboard", path: "/dashboard", icon:  companiesIcon  },
-        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+        { id: 1, name: "Clock In", path: "/clock-in", icon: timerIcon },
+        { id: 2, name: "Break", path: "/break", icon: breakIcon },
+        { id: 3, name: "Absences", path: "/absences", icon: companiesIcon },
+        { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
+        { id: 5, name: "Info", path: "/info", icon: companiesIcon },
+        { id: 6, name: "Manager Panel", path: "/manager", icon: companiesIcon },
+        { id: 7, name: "Select Company", path: "/select-company", icon: companiesIcon },
+        { id: 8, name: "Dashboard", path: "/dashboard", icon: companiesIcon },
+        { id: 9, name: "Profile", path: "/profile", icon: companiesIcon }
     ];
 
     const userOptions = [
-        { name: "Clock In", path: "/clock-in", icon:  timerIcon  },
-        { name: "Break", path: "/break", icon:  breakIcon  },
-        { name: "Absences", path: "/absences", icon:  breakIcon  },
-        { name: "Vacations", path: "/vacations", icon:  companiesIcon  },
-        { name: "Info", path: "/info", icon:  companiesIcon  },
-        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
-        { name: "Dashboard", path: "/dashboard", icon:  companiesIcon  },
-        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+        { id: 1, name: "Clock In", path: "/clock-in", icon: timerIcon },
+        { id: 2, name: "Break", path: "/break", icon: breakIcon },
+        { id: 3, name: "Absences", path: "/absences", icon: breakIcon },
+        { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
+        { id: 5, name: "Info", path: "/info", icon: companiesIcon },
+        { id: 6, name: "Select Company", path: "/select-company", icon: companiesIcon },
+        { id: 7, name: "Dashboard", path: "/dashboard", icon: companiesIcon },
+        { id: 8, name: "Profile", path: "/profile", icon: companiesIcon }
     ];
 
     const noRoleOptions = [
-        { name: "Select Company", path: "/select-company", icon:  companiesIcon  },
-        { name: "Info", path: "/info", icon:  companiesIcon  },
-        { name: "Profile", path: "/profile", icon:  companiesIcon  }
+        { id: 1, name: "Select Company", path: "/select-company", icon: companiesIcon },
+        { id: 2, name: "Info", path: "/info", icon: companiesIcon },
+        { id: 3, name: "Profile", path: "/profile", icon: companiesIcon }
     ];
 
     let sidebarOptions = {};
@@ -166,10 +166,11 @@ export default function SideBar() {
                 <nav className="flex flex-col gap-4 flex-1">
                     {sidebarOptions.map((option) => (
                         <div
-                            className="hover:bg-secondary p-3 rounded transition hover:text-white flex items-center gap-4"
+                            key={option.id}
+                            className="hover:bg-secondary p-3 rounded transition hover:text-white flex items-center gap-4 cursor-pointer"
                             onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            <img src={option.icon} alt="" />
+                            <img src={option.icon} alt={`${option.name} icon`} />
                             <p>{option.name}</p>
                         </div>
                     ))}
@@ -198,21 +199,21 @@ export default function SideBar() {
                     <p className="mb-1">x</p>
                 </button>
 
-                <div className="sidebar-header mb-3 mt-8 border-b border-gray-300 pb-4 flex items-center gap-3" onClick={() => navigate("/profile")}>
-                    <img src={userData ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="" className="w-10 h-10 rounded-full shadow bg-white" />
-                    <h2 to="/profile" className="text-xl font-bold tracking-wide hover:text-blue-400 transition">
+                <div className="sidebar-header mb-3 mt-8 border-b border-gray-300 pb-4 flex items-center gap-3 cursor-pointer" onClick={() => navigate("/profile")}>
+                    <img src={userData ? userData.photo_url : "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="User avatar" className="w-10 h-10 rounded-full shadow bg-white" />
+                    <h2 className="text-xl font-bold tracking-wide hover:text-blue-400 transition">
                         {userData ? userData.name : "HourCheck"}
                     </h2>
                 </div>
 
                 <nav className="flex flex-col gap-4 flex-1">
-
                     {sidebarOptions.map((option) => (
                         <div
-                            className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white flex items-center gap-4"
+                            key={option.id}
+                            className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white flex items-center gap-4 cursor-pointer"
                             onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            <img src={option.icon} alt="" />
+                            <img src={option.icon} alt={`${option.name} icon`} />
                             <p>{option.name}</p>
                         </div>
                     ))}

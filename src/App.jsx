@@ -21,6 +21,7 @@ import Vacations from "./components/Vacations.jsx";
 import Absences from "./components/Absences.jsx";
 import Info from "./components/Info.jsx";
 import Break from "./components/Break.jsx";
+import TestTailwind from "./components/TestTailwind.jsx";
 
 export default function App() {
 
@@ -49,6 +50,7 @@ export default function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/vacations" element={<Vacations />} />
         <Route path="/absences" element={<Absences />} /> 
+        <Route path="/test-tailwind" element={<TestTailwind />} />
       </Routes>
     </BrowserRouter>
   )
