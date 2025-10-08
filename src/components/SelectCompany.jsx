@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./Header.jsx";
+import Toolbar from "./Toolbar.jsx";
 import logo from "../assets/logo.png";
 import API_BASE_URL from "../config/api.js";
 
@@ -44,43 +45,6 @@ export default function SelectCompany() {
         getCompanies();
     }, []);
 
-    if (loading) {
-        return (
-            <>
-                <Header />
-                <div className="flex flex-col items-center justify-center min-h-[60vh]">
-                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6" style={{ borderColor: "var(--color-secondary)" }}></div>
-                    <span className="font-semibold text-lg" style={{ color: "var(--color-secondary)" }}>Cargando empresas...</span>
-                </div>
-            </>
-        );
-    }
-
-    if (companies.length === 0) {
-        return (
-            <>
-                <Header />
-                <div className="card bg-white w-8/10 h-8/10 border-2 border-gray-300 rounded-2xl mt-10 pb-10 max-w-[350px] max-h-fit justify-self-center mx-auto" >
-                    <img src={logo} alt="Logo" />
-                    <div className="flex flex-col items-center gap-4 mt-6">
-                        <a
-                            href="/create-new-company"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors text-center"
-                        >
-                            Crear nueva empresa
-                        </a>
-                        <a
-                            href="/join-existing-company"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors text-center"
-                        >
-                            Unirse a una empresa existente
-                        </a>
-                    </div>
-                </div>
-            </>
-        );
-    }
-
     const saveUserCompanyInfo = async (companyId) => {
         try {
             const response = await fetch(`${API_BASE_URL}/users/company/info`, {
@@ -102,11 +66,52 @@ export default function SelectCompany() {
         }
     };
 
+    if (loading) {
+        return (
+            <section className="min-h-screen flex items-center justify-center bg-background lg:pl-64">
+                <Header />
+                <div className="flex flex-col items-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6 border-secondary"></div>
+                    <p className="text-gray-600">Verificando estado...</p>
+                </div>
+                <Toolbar />
+            </section>
+        );
+    }
+
+    if (companies.length === 0) {
+        return (
+            <section className="min-h-screen bg-background">
+                <Header />
+                <div className="card w-8/10 h-8/10 border-2 border-gray-300 rounded-2xl mt-10 pb-10 max-w-[350px] max-h-fit justify-self-center mx-auto" >
+                    <img src={logo} alt="Logo" />
+                    <div className="flex flex-col items-center gap-4 mt-6">
+                        <a
+                            href="/create-new-company"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors text-center"
+                        >
+                            Crear nueva empresa
+                        </a>
+                        <a
+                            href="/join-existing-company"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors text-center"
+                        >
+                            Unirse a una empresa existente
+                        </a>
+                    </div>
+                </div>
+                <Toolbar />
+            </section>
+        );
+    }
+
+
+
     return (
-        <section className="lg:flex min-h-screen bg-gray-100">
+        <section className="lg:flex min-h-screen bg-background">
             <Header />
-            <div className="w-full lg:ml-64 p-6">
-                <h2 className="text-center font-bold text-2xl mt-8 mb-6">Mis empresa</h2>
+            <div className="w-full lg:ml-64 pt-30 lg:pt-5">
+                <h2 className="text-center font-bold text-2xl">Mis empresa</h2>
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                 <div className="flex flex-wrap gap-6 px-4 m-10 justify-center ">
                     {companies.map((item) => (
@@ -131,6 +136,7 @@ export default function SelectCompany() {
                     ))}
                 </div>
             </div>
+            <Toolbar />
         </section>
     );
 }

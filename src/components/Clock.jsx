@@ -4,8 +4,11 @@ import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import jsQR from "jsqr";
 import API_BASE_URL from "../config/api";
+import timerUpIcon from "../assets/timer-up-icon.svg";
+import timerDownIcon from "../assets/timer-down-icon.svg";
+import LoadingOverlay from "./LoadingOverlay";
 
-export default function ClockIn() {
+export default function Clock() {
     const clockInStatusChecked = useRef(false);
     const workMode = localStorage.getItem("work_mode_id");
     const token = localStorage.getItem("token");
@@ -17,7 +20,7 @@ export default function ClockIn() {
     const [qrResult, setQrResult] = useState("");
     const [clockStatus, setClockStatus] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [streamReady, setStreamReady] = useState(null); 
+    const [streamReady, setStreamReady] = useState(null);
 
 
     // Función que maneja la apertura de la cámara
@@ -173,30 +176,35 @@ export default function ClockIn() {
     if (workMode == "1") { // ESCANEO PRESENCIAL 
         if (isLoading) {
             return (
-                <>
+                <section className="min-h-screen flex items-center justify-center">
                     <Header />
-                    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 flex items-center justify-center">
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
-                            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <div className="flex flex-col items-center">
+                            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6 border-secondary"></div>
                             <p className="text-gray-600">Verificando estado...</p>
                         </div>
-                    </div>
                     <Toolbar />
-                </>
+                </section>
             );
         }
 
         return (
-            <>
+            <section className="min-h-screen flex flex-col">
                 <Header />
-                <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100">
-                    <div className="container mx-auto px-4 py-8">
+                    <section className="pt-30">
                         <div className="text-center mb-8">
                             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                                {clockStatus === 'in' ? '🕐 Clock In' : '🕕 Clock Out'}
+                                {clockStatus === 'in' ? (
+                                    <div className="flex items-center justify-center gap-5">
+                                        <p>Clock In</p>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center gap-5">
+                                        <p>Clock Out</p>
+                                    </div>
+                                )}
                             </h2>
                             <p className="text-lg text-gray-600 mb-2">
-                                {clockStatus === 'in' 
+                                {clockStatus === 'in'
                                     ? 'Escanea tu código QR para registrar tu entrada'
                                     : 'Escanea tu código QR para registrar tu salida'
                                 }
@@ -224,10 +232,10 @@ export default function ClockIn() {
                                         </p>
                                     </div>
                                     <button
-                                        className={`w-full ${clockStatus === 'in' 
-                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' 
+                                        className={`w-full ${clockStatus === 'in'
+                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
                                             : 'bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700'
-                                        } text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold`}
+                                            } text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold`}
                                         onClick={handleOpenCamera}
                                     >
                                         📷 Abrir Cámara
@@ -278,10 +286,9 @@ export default function ClockIn() {
                                 </div>
                             )}
                         </div>
-                    </div>
-                </div>
+                    </section>
                 <Toolbar />
-            </>
+            </section>
         )
     }
 

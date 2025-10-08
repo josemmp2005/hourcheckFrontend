@@ -11,7 +11,7 @@ import AdminPanel from './components/AdminPanel.jsx'
 import ManagerPanel from "./components/ManagerPanel.jsx";
 import CompanyInvitations from "./components/CompanyInvitations.jsx";
 import CheckInvitation from "./components/CheckInvitation.jsx";
-import ClockIn from "./components/ClockIn.jsx";
+import Clock from "./components/Clock.jsx";
 import EmployeesManagement from "./components/EmployeesManagement.jsx";
 import EmployeeManagement from "./components/EmployeeManagement.jsx";
 import ShiftsManagements from "./components/SihftsManagements.jsx";
@@ -40,7 +40,7 @@ export default function App() {
         <Route path="/manager-panel" element={<ManagerPanel />} />
         <Route path="/admin-panel/company-invitations" element={<CompanyInvitations />} />
         <Route path="/invitation" element={<CheckInvitation />} />
-        <Route path="/clock-in" element={<ClockIn />} />
+        <Route path="/clock" element={<Clock />} />
         <Route path="/admin-panel/employees-management" element={<EmployeesManagement />} />
         <Route path="/admin-panel/employee-management" element={<EmployeeManagement />} />
         <Route path="/admin-panel/shifts-management" element={<ShiftsManagements />} />

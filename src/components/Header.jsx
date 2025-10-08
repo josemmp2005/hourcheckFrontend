@@ -59,7 +59,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="header bg-primary flex justify-between items-center px-2 py-2 lg:px-0 lg:py-0 shadow-md border bg-white border-b border-gray-200">
+    <header className="header fixed top-0 w-full bg-white z-10 flex justify-between items-center px-2 py-2 lg:px-0 lg:py-0 shadow-md border bg-white border-b border-gray-200">
       <SideBar />
       <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition lg:hidden">
         {companyData ? companyData.name : "HourCheck"}

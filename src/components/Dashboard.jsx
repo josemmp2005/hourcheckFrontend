@@ -5,16 +5,19 @@ import QRCode from 'qrcode';
 import API_BASE_URL from '../config/api.js';
 import Toolbar from './Toolbar.jsx';
 import timerIcon from '../assets/timer-icon.svg';
+import BackgroundLogo from './BackgroundLogo.jsx';
 
 // Solo importa Recharts directamente
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const role = localStorage.getItem("role_id");
+  const [role, setRole] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const companyId = localStorage.getItem("company_id");
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [dailyCode, setDailyCode] = useState("");
+
 
   // Datos para las gráficas
   const monthlyPerformanceData = [
@@ -77,20 +80,59 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (role === "5") {
-      const fetchAndGenerateQR = async () => {
-        const data = await getDailyCode();
-        if (data && data.code) {
-          setDailyCode(data.code);
-          generateQR(data.code);
-        }
-      };
-      fetchAndGenerateQR();
+    if (!companyId) {
+      navigate('/select-company');
+      return;
     }
-  }, [role]);
+    const checkRole = () => {
+      const storedRole = localStorage.getItem("role_id");
 
-  // QR Generator for role 5
-  if (role === "5") {
+      if (storedRole) {
+        setRole(storedRole);
+        setIsLoading(false);
+
+        // Si es role 5, generar QR
+        if (storedRole === "5") {
+          const fetchAndGenerateQR = async () => {
+            const data = await getDailyCode();
+            if (data && data.code) {
+              setDailyCode(data.code);
+              generateQR(data.code);
+            }
+          };
+          fetchAndGenerateQR();
+        }
+      } else {
+        // Si no hay role_id, esperar un poco y volver a intentar
+        setTimeout(checkRole, 100);
+      }
+    };
+
+    checkRole();
+  }, []);
+
+  // Mostrar loading mientras carga el role
+  if (isLoading || !role) {
+    return renderLoading();
+  }
+
+  // Una vez tenemos el role, renderizar el dashboard correspondiente
+  switch (role) {
+    case "1":
+      return renderSuperAdminDashboard();
+    case "2":
+      return renderAdminDashboard();
+    case "3":
+      return renderManagerDashboard();
+    case "4":
+      return renderEmployeeDashboard();
+    case "5":
+      return renderQRDashboard();
+    default:
+      return renderLoading();
+  }
+
+  function renderQRDashboard() {
     return (
       <section className="lg:flex min-h-screen">
         <Header />
@@ -128,148 +170,99 @@ export default function Dashboard() {
     );
   }
 
-  return (
-    <section className="">
-      <Header />
-      <div className="w-full p-6">
-        <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center mb-6">
-          <div className="flex-1">
-            <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/clock-in')}>
-              <p>Ultimo Clock In a las XX:XXh </p>
-              <img src={timerIcon} alt="Timer Icon" />
+  function renderEmployeeDashboard() {
+    return (
+      <section className="">
+        <Header />
+        <div className="w-full p-6 lg:pl-64">
+          <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center mb-6">
+            <div className="flex-1">
+              <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/clock-in')}>
+                <p>Ultimo Clock In a las XX:XXh </p>
+                <img src={timerIcon} alt="Timer Icon" />
+              </div>
+              <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/break')}>
+                <p>Break </p>
+                <img src={timerIcon} alt="Timer Icon" />
+              </div>
+              <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6">
+                <p>Total Horas Diarias</p>
+              </div>
             </div>
-            <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/break')}>
-              <p>Break </p>
-              <img src={timerIcon} alt="Timer Icon" />
-            </div>
-            <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6">
-              <p>Total Horas Diarias</p>
+
+            <div className="flex-2 flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center">
+              <div className="border border-gray-400 border-gray-400 rounded-xl shadow-md  w-full">
+                <p className="">Tiempo trabajado hoy</p>
+
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={hoursData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      label={({ name, value }) => `${name}: ${value}%`}
+                    >
+                      {hoursData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+
+              </div>
+              <div className="border border-gray-400 border-gray-400 rounded-xl shadow-md w-full">
+                <p className="">Tiempo trabajado hoy</p>
+
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={hoursData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      label={({ name, value }) => `${name}: ${value}%`}
+                    >
+                      {hoursData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
 
-          <div className="flex-2 flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center">
-            <div className="border border-gray-400 border-gray-400 rounded-xl shadow-md  w-full">
-              <p className="">Tiempo trabajado hoy</p>
-
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={hoursData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    label={({ name, value }) => `${name}: ${value}%`}
-                  >
-                    {hoursData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-
-            </div>
-            <div className="border border-gray-400 border-gray-400 rounded-xl shadow-md w-full">
-              <p className="">Tiempo trabajado hoy</p>
-
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={hoursData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    label={({ name, value }) => `${name}: ${value}%`}
-                  >
-                    {hoursData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col lg:flex-row lg:justify-center gap-5 lg:items-center mb-6">
-          <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
-            <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
-            <p className="text-gray-600 text-sm mb-4">Comparativa de productividad por meses</p>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyPerformanceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="mes" />
-                <YAxis />
-                <Tooltip
-                  formatter={(value) => [`${value}%`, 'Rendimiento']}
-                  labelFormatter={(label) => `Mes: ${label}`}
-                />
-                <Bar
-                  dataKey="rendimiento"
-                  fill="#10b981"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
-            <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
-            <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={weeklyPerformanceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="semana" />
-                <YAxis />
-                <Tooltip
-                  formatter={(value, name) => [
-                    name === 'rendimiento' ? `${value}%` : `${value}h`,
-                    name === 'rendimiento' ? 'Rendimiento' : 'Horas Trabajadas'
-                  ]}
-                  labelFormatter={(label) => `${label}`}
-                />
-                <Bar
-                  dataKey="rendimiento"
-                  fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center gap-5">
-          <div className="flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center w-full">
+          <div className="flex flex-col lg:flex-row lg:justify-center gap-5 lg:items-center mb-6">
             <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
-              <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
-              <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
+              <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
+              <p className="text-gray-600 text-sm mb-4">Comparativa de productividad por meses</p>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={weeklyPerformanceData}>
+                <BarChart data={monthlyPerformanceData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="semana" />
+                  <XAxis dataKey="mes" />
                   <YAxis />
                   <Tooltip
-                    formatter={(value, name) => [
-                      name === 'rendimiento' ? `${value}%` : `${value}h`,
-                      name === 'rendimiento' ? 'Rendimiento' : 'Horas Trabajadas'
-                    ]}
-                    labelFormatter={(label) => `${label}`}
+                    formatter={(value) => [`${value}%`, 'Rendimiento']}
+                    labelFormatter={(label) => `Mes: ${label}`}
                   />
                   <Bar
                     dataKey="rendimiento"
-                    fill="#3b82f6"
+                    fill="#10b981"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
               </ResponsiveContainer>
             </div>
+
             <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
               <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
               <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
@@ -294,30 +287,301 @@ export default function Dashboard() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
-            <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
-            <p className="text-gray-600 text-sm mb-4">Comparativa de productividad por meses</p>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyPerformanceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="mes" />
-                <YAxis />
-                <Tooltip
-                  formatter={(value) => [`${value}%`, 'Rendimiento']}
-                  labelFormatter={(label) => `Mes: ${label}`}
-                />
-                <Bar
-                  dataKey="rendimiento"
-                  fill="#10b981"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+
+          <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center gap-5">
+            <div className="flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center w-full">
+              <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+                <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
+                <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={weeklyPerformanceData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="semana" />
+                    <YAxis />
+                    <Tooltip
+                      formatter={(value, name) => [
+                        name === 'rendimiento' ? `${value}%` : `${value}h`,
+                        name === 'rendimiento' ? 'Rendimiento' : 'Horas Trabajadas'
+                      ]}
+                      labelFormatter={(label) => `${label}`}
+                    />
+                    <Bar
+                      dataKey="rendimiento"
+                      fill="#3b82f6"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+                <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
+                <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={weeklyPerformanceData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="semana" />
+                    <YAxis />
+                    <Tooltip
+                      formatter={(value, name) => [
+                        name === 'rendimiento' ? `${value}%` : `${value}h`,
+                        name === 'rendimiento' ? 'Rendimiento' : 'Horas Trabajadas'
+                      ]}
+                      labelFormatter={(label) => `${label}`}
+                    />
+                    <Bar
+                      dataKey="rendimiento"
+                      fill="#3b82f6"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+            </div>
+            <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+
+              <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
+              <p className="text-gray-600 text-sm mb-4">Comparativa de productividad por meses</p>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={monthlyPerformanceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="mes" />
+                  <YAxis />
+                  <Tooltip
+                    formatter={(value) => [`${value}%`, 'Rendimiento']}
+                    labelFormatter={(label) => `Mes: ${label}`}
+                  />
+                  <Bar
+                    dataKey="rendimiento"
+                    fill="#10b981"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+        <Toolbar />
+      </section>
+    );
+  }
+
+  function renderManagerDashboard() {
+    return (
+      <section className="lg:flex min-h-screen bg-background">
+        <Header />
+        <div className="w-full p-6 lg:pl-70">
+          <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center mb-6">
+            <div className="flex-1">
+              <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/clock-in')}>
+                <p>Ultimo Clock In a las XX:XXh </p>
+                <img src={timerIcon} alt="Timer Icon" />
+              </div>
+              <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/break')}>
+                <p>Break </p>
+                <img src={timerIcon} alt="Timer Icon" />
+              </div>
+              <div className="p-6 flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6">
+                <p>Total Horas Diarias</p>
+              </div>
+            </div>
+
+            <div className="flex-2 flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center">
+              <div className="border border-gray-400 border-gray-400 rounded-xl shadow-md  w-full">
+                <p className="">Tiempo trabajado hoy</p>
+
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={hoursData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      label={({ name, value }) => `${name}: ${value}%`}
+                    >
+                      {hoursData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+
+              </div>
+              <div className="border border-gray-400 border-gray-400 rounded-xl shadow-md w-full">
+                <p className="">Tiempo trabajado hoy</p>
+
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={hoursData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      label={({ name, value }) => `${name}: ${value}%`}
+                    >
+                      {hoursData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
 
+          <div className="flex flex-col lg:flex-row lg:justify-center gap-5 lg:items-center mb-6">
+            <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+              <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
+              <p className="text-gray-600 text-sm mb-4">Comparativa de productividad por meses</p>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={monthlyPerformanceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="mes" />
+                  <YAxis />
+                  <Tooltip
+                    formatter={(value) => [`${value}%`, 'Rendimiento']}
+                    labelFormatter={(label) => `Mes: ${label}`}
+                  />
+                  <Bar
+                    dataKey="rendimiento"
+                    fill="#10b981"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+              <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
+              <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={weeklyPerformanceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="semana" />
+                  <YAxis />
+                  <Tooltip
+                    formatter={(value, name) => [
+                      name === 'rendimiento' ? `${value}%` : `${value}h`,
+                      name === 'rendimiento' ? 'Rendimiento' : 'Horas Trabajadas'
+                    ]}
+                    labelFormatter={(label) => `${label}`}
+                  />
+                  <Bar
+                    dataKey="rendimiento"
+                    fill="#3b82f6"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center gap-5">
+            <div className="flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center w-full">
+              <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+                <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
+                <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={weeklyPerformanceData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="semana" />
+                    <YAxis />
+                    <Tooltip
+                      formatter={(value, name) => [
+                        name === 'rendimiento' ? `${value}%` : `${value}h`,
+                        name === 'rendimiento' ? 'Rendimiento' : 'Horas Trabajadas'
+                      ]}
+                      labelFormatter={(label) => `${label}`}
+                    />
+                    <Bar
+                      dataKey="rendimiento"
+                      fill="#3b82f6"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+                <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
+                <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={weeklyPerformanceData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="semana" />
+                    <YAxis />
+                    <Tooltip
+                      formatter={(value, name) => [
+                        name === 'rendimiento' ? `${value}%` : `${value}h`,
+                        name === 'rendimiento' ? 'Rendimiento' : 'Horas Trabajadas'
+                      ]}
+                      labelFormatter={(label) => `${label}`}
+                    />
+                    <Bar
+                      dataKey="rendimiento"
+                      fill="#3b82f6"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+            </div>
+            <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+
+              <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
+              <p className="text-gray-600 text-sm mb-4">Comparativa de productividad por meses</p>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={monthlyPerformanceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="mes" />
+                  <YAxis />
+                  <Tooltip
+                    formatter={(value) => [`${value}%`, 'Rendimiento']}
+                    labelFormatter={(label) => `Mes: ${label}`}
+                  />
+                  <Bar
+                    dataKey="rendimiento"
+                    fill="#10b981"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
-      </div>
-      <Toolbar />
-    </section>
-  );
+        <Toolbar />
+      </section>
+    );
+  }
+
+  function renderLoading() {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-background">
+        <Header />
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 mb-6 border-secondary"></div>
+          <p className="text-gray-600">Cargando dashboard...</p>
+        </div>
+      </section>
+    );
+  }
+
+  // Agregar las funciones que faltan
+  function renderSuperAdminDashboard() {
+    return renderEmployeeDashboard(); // Por ahora usa el mismo
+  }
+
+  function renderAdminDashboard() {
+    return renderEmployeeDashboard(); // Por ahora usa el mismo
+  }
 }

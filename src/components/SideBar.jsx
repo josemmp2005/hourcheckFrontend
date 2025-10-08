@@ -66,11 +66,11 @@ export default function SideBar() {
         getUserData();
     }, []);
 
-    console.log(userData)
+    // console.log(userData)
 
 
     const adminOptions = [
-        { id: 1, name: "Clock In", path: "/clock-in", icon: timerIcon },
+        { id: 1, name: "Clock", path: "/clock", icon: timerIcon },
         { id: 2, name: "Break", path: "/break", icon: breakIcon },
         { id: 3, name: "Absences", path: "/absences", icon: companiesIcon },
         { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
@@ -82,7 +82,7 @@ export default function SideBar() {
     ];
 
     const managerOptions = [
-        { id: 1, name: "Clock In", path: "/clock-in", icon: timerIcon },
+        { id: 1, name: "Clock", path: "/clock", icon: timerIcon },
         { id: 2, name: "Break", path: "/break", icon: breakIcon },
         { id: 3, name: "Absences", path: "/absences", icon: companiesIcon },
         { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
@@ -94,7 +94,7 @@ export default function SideBar() {
     ];
 
     const userOptions = [
-        { id: 1, name: "Clock In", path: "/clock-in", icon: timerIcon },
+        { id: 1, name: "Clock", path: "/clock", icon: timerIcon },
         { id: 2, name: "Break", path: "/break", icon: breakIcon },
         { id: 3, name: "Absences", path: "/absences", icon: breakIcon },
         { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
@@ -158,11 +158,12 @@ export default function SideBar() {
             {/* Sidebar fijo para desktop */}
             <aside className="hidden lg:flex fixed top-0 left-0 h-screen w-64 bg-gray-800 text-white shadow-lg z-40 flex-col p-4">
                 <div className="sidebar-header mb-8 mt-4">
-                    <Link to="/" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
+                    <Link to="/dashboard" className="text-2xl font-bold tracking-wide hover:text-blue-400 transition">
                         {companyData ? companyData.name : "HourCheck"}
                     </Link>
                 </div>
 
+                {/* Sidebar desktop */}
                 <nav className="flex flex-col gap-4 flex-1">
                     {sidebarOptions.map((option) => (
                         <div
@@ -170,7 +171,7 @@ export default function SideBar() {
                             className="hover:bg-secondary p-3 rounded transition hover:text-white flex items-center gap-4 cursor-pointer"
                             onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            <img src={option.icon} alt={`${option.name} icon`} />
+                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter brightness-0 invert" />
                             <p>{option.name}</p>
                         </div>
                     ))}
@@ -206,6 +207,7 @@ export default function SideBar() {
                     </h2>
                 </div>
 
+                {/* Sidebar móvil */}
                 <nav className="flex flex-col gap-4 flex-1">
                     {sidebarOptions.map((option) => (
                         <div
@@ -213,7 +215,7 @@ export default function SideBar() {
                             className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white flex items-center gap-4 cursor-pointer"
                             onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            <img src={option.icon} alt={`${option.name} icon`} />
+                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter brightness-0 invert" />
                             <p>{option.name}</p>
                         </div>
                     ))}
