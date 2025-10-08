@@ -9,19 +9,19 @@ export default function Toolbar() {
     return (
         <div className="fixed bottom-0 left-0 w-full bg-white inset-shadow-sm border-t border-gray-300 p-4 flex justify-around lg:hidden rounded-t-xl">
             <div className="flex flex-col items-center" onClick={() => navigate("/select-company")}>
-                <img src={companiesIcon} alt="Companies" className="w-8 h-8"  />
+                <img src={companiesIcon} alt="Companies" className="w-6 h-6"  />
                 <span className="text-xs">Companies</span>
             </div>
             <div className="flex flex-col items-center" onClick={() => navigate("/dashboard")}>
-                <img src={homeIcon} alt="Home" className="w-8 h-8"  />
+                <img src={homeIcon} alt="Home" className="w-6 h-6"  />
                 <span className="text-xs">Dashboard</span>
             </div>
             <div className="flex flex-col items-center" onClick={() => navigate("/clock")}>
-                <img src={timerIcon} alt="Timer" className="w-8 h-8"  />
+                <img src={timerIcon} alt="Timer" className="w-6 h-6"  />
                 <span className="text-xs">Clock</span>
             </div>
             <div className="flex flex-col items-center" onClick={() => navigate("/break")}>
-                <img src={breakIcon} alt="Break" className="w-8 h-8"  />
+                <img src={breakIcon} alt="Break" className="w-6 h-6"  />
                 <span className="text-xs">Break</span>
             </div>
         </div>
