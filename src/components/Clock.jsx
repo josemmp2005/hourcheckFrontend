@@ -173,6 +173,15 @@ export default function Clock() {
         return () => clearInterval(interval);
     }, [cameraOpen, clockStatus]);
 
+    // Función para cerrar la cámara
+    const handleCloseCamera = () => {
+        if (videoRef.current && videoRef.current.srcObject) {
+            videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+        }
+        setCameraOpen(false);
+        setStreamReady(null);
+    };
+
     if (workMode == "1") { // ESCANEO PRESENCIAL 
         if (isLoading) {
             return (
@@ -263,6 +272,14 @@ export default function Clock() {
                                         </div>
                                     </div>
                                     <canvas ref={canvasRef} style={{ display: "none" }} />
+                                    
+                                    {/* Botón para cerrar cámara */}
+                                    <button
+                                        className="w-full mt-4 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold"
+                                        onClick={handleCloseCamera}
+                                    >
+                                        ❌ Cerrar Cámara
+                                    </button>
                                 </div>
                             )}
 
