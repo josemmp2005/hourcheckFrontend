@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Toolbar() {
     const navigate = useNavigate();
     return (
-        <div className="fixed bottom-0 left-0 w-full bg-white inset-shadow-sm border-t border-gray-300 p-4 flex justify-around lg:hidden rounded-t-xl">
+        <div className="fixed bottom-0 left-0 w-full bg-white inset-shadow-sm border-t border-gray-300 p-3 flex justify-around lg:hidden rounded-t-xl">
             <div className="flex flex-col items-center" onClick={() => navigate("/select-company")}>
                 <img src={companiesIcon} alt="Companies" className="w-6 h-6"  />
                 <span className="text-xs">Companies</span>
