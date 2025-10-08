@@ -215,7 +215,7 @@ export default function SideBar() {
                             className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white flex items-center gap-4 cursor-pointer"
                             onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter brightness-0 invert" />
+                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter brightness-" />
                             <p>{option.name}</p>
                         </div>
                     ))}

@@ -105,9 +105,8 @@ export default function Profile() {
     };
 
     return (
-        <>
+        <section>
             <Header />
-            <div className="flex flex-col items-center justify-center min-h-[80vh] bg-gradient-to-br from-primary via-secondary to-primary py-8">
                 <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md flex flex-col items-center">
                     <h1 className='text-3xl font-bold mb-6 text-primary text-center'>Mi Perfil</h1>
                     <form className="flex flex-col gap-4 w-full" onSubmit={handleUpdateUserInfo}>
@@ -154,7 +153,6 @@ export default function Profile() {
                         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
                     </form>
                 </div>
-            </div>
-        </>
+        </section>
     );
 }
