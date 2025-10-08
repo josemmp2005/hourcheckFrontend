@@ -1,4 +1,5 @@
 import Header from './Header';
+import Toolbar from './Toolbar';
 import { useEffect, useState } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import API_BASE_URL from '../config/api.js';
@@ -105,54 +106,58 @@ export default function Profile() {
     };
 
     return (
-        <section>
+        <section className="min-h-screen bg-background flex flex-col items-center pt-20 lg:pt-5 lg:pl-64">
             <Header />
-                <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md flex flex-col items-center">
-                    <h1 className='text-3xl font-bold mb-6 text-primary text-center'>Mi Perfil</h1>
-                    <form className="flex flex-col gap-4 w-full" onSubmit={handleUpdateUserInfo}>
-                        <input
-                            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition"
-                            type="text"
-                            placeholder="Nombre"
-                            defaultValue={userData ? userData.name : ''}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                        <p className='border-b border-gray-300 px-4 py-2 text-sm text-gray-700'>
-                            {userData ? userData.email : "Cargando..."}
-                        </p>
-                        <input
-                            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition"
-                            type="password"
-                            placeholder="Nueva contraseña"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <input
-                            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition"
-                            type="password"
-                            placeholder="Confirmar nueva contraseña"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                        <input
-                            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition"
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setPhotoFile(e.target.files[0])}
-                        />
-                        <button
-                            type="submit"
-                            disabled={!userData}
-                            className={`px-4 py-2 rounded-lg font-semibold transition ${userData
-                                    ? "bg-primary text-white hover:bg-secondary"
-                                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                                }`}
-                        >
-                            Actualizar Información
-                        </button>
-                        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-                    </form>
-                </div>
-        </section>
+            <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md flex flex-col items-center mt-10">
+                <form className="flex flex-col gap-4 w-full p-4" onSubmit={handleUpdateUserInfo}>
+                    <div className='flex flex-col items-center gap-4 mb-4'>
+                        <img src={userData ? userData.photo_url : ''} alt="User Avatar" className="w-24 h-24 rounded-full" />
+                        <p className='text-sm text-gray-600 '>{userData ? userData.name : "Cargando..."}</p>
+                    </div>
+                    <input
+                        className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary transition"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setPhotoFile(e.target.files[0])}
+                    />
+                    <input
+                        className="input bg-none border-b-1 border-secondary p-2 text-lg focus:outline-none w-full pr-10"
+                        type="text"
+                        placeholder="Nombre"
+                        defaultValue={userData ? userData.name : ''}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    <p className="input bg-none border-b-1 border-gray-500 p-2 text-lg focus:outline-none w-full pr-10">
+                        {userData ? userData.email : "Cargando..."}
+                    </p>
+                    <input
+                        className="input bg-none border-b-1 border-secondary p-2 text-lg focus:outline-none w-full pr-10"
+                        type="password"
+                        placeholder="Nueva contraseña"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <input
+                        className="input bg-none border-b-1 border-secondary p-2 text-lg focus:outline-none w-full pr-10"
+                        type="password"
+                        placeholder="Confirmar nueva contraseña"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <button
+                        type="submit"
+                        disabled={!userData}
+                        className={`px-4 py-2 rounded-lg font-semibold transition ${userData
+                            ? "bg-primary text-white hover:bg-secondary"
+                            : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                            }`}
+                    >
+                        Actualizar Información
+                    </button>
+                    {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+                </form>
+            </div>
+            <Toolbar />
+        </section >
     );
 }
