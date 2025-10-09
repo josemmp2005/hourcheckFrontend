@@ -4,10 +4,12 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../config/api.js";
 import logo from "../assets/logo.png";
-import homeIcon from '../assets/home-icon.svg';
-import timerIcon from '../assets/timer-icon.svg';
-import companiesIcon from '../assets/companies-icon.svg';
-import breakIcon from '../assets/break-icon.svg';
+import homeIcon from '../assets/icons/home-icon.svg';
+import timerIcon from '../assets/icons/timer-icon.svg';
+import companiesIcon from '../assets/icons/companies-icon.svg';
+import breakIcon from '../assets/icons/break-icon.svg';
+import profileIcon from '../assets/icons/profile-icon.svg';
+import LogOut from "../assets/icons/logout-icon.svg";
 
 
 export default function SideBar() {
@@ -77,8 +79,8 @@ export default function SideBar() {
         { id: 5, name: "Info", path: "/info", icon: companiesIcon },
         { id: 6, name: "Admin Panel", path: "/admin-panel", icon: companiesIcon },
         { id: 7, name: "Select Company", path: "/select-company", icon: companiesIcon },
-        { id: 8, name: "Dashboard", path: "/dashboard", icon: companiesIcon },
-        { id: 9, name: "Profile", path: "/profile", icon: companiesIcon }
+        { id: 8, name: "Dashboard", path: "/dashboard", icon: homeIcon },
+        { id: 9, name: "Profile", path: "/profile", icon: profileIcon }
     ];
 
     const managerOptions = [
@@ -89,8 +91,8 @@ export default function SideBar() {
         { id: 5, name: "Info", path: "/info", icon: companiesIcon },
         { id: 6, name: "Manager Panel", path: "/manager", icon: companiesIcon },
         { id: 7, name: "Select Company", path: "/select-company", icon: companiesIcon },
-        { id: 8, name: "Dashboard", path: "/dashboard", icon: companiesIcon },
-        { id: 9, name: "Profile", path: "/profile", icon: companiesIcon }
+        { id: 8, name: "Dashboard", path: "/dashboard", icon: homeIcon },
+        { id: 9, name: "Profile", path: "/profile", icon: profileIcon }
     ];
 
     const userOptions = [
@@ -100,14 +102,14 @@ export default function SideBar() {
         { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
         { id: 5, name: "Info", path: "/info", icon: companiesIcon },
         { id: 6, name: "Select Company", path: "/select-company", icon: companiesIcon },
-        { id: 7, name: "Dashboard", path: "/dashboard", icon: companiesIcon },
-        { id: 8, name: "Profile", path: "/profile", icon: companiesIcon }
+        { id: 7, name: "Dashboard", path: "/dashboard", icon: homeIcon },
+        { id: 8, name: "Profile", path: "/profile", icon: profileIcon }
     ];
 
     const noRoleOptions = [
         { id: 1, name: "Select Company", path: "/select-company", icon: companiesIcon },
         { id: 2, name: "Info", path: "/info", icon: companiesIcon },
-        { id: 3, name: "Profile", path: "/profile", icon: companiesIcon }
+        { id: 3, name: "Profile", path: "/profile", icon: profileIcon }
     ];
 
     let sidebarOptions = {};
@@ -171,20 +173,18 @@ export default function SideBar() {
                             className="hover:bg-secondary p-3 rounded transition hover:text-white flex items-center gap-4 cursor-pointer"
                             onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter brightness-0 invert" />
+                            <img src={option.icon} alt={`${option.name} icon`} className="w-6 h-6 filter brightness-0 invert" />
                             <p>{option.name}</p>
                         </div>
                     ))}
                 </nav>
 
-                <div className="mt-auto">
-                    <button
-                        className="w-full bg-red-500 hover:bg-red-600 p-3 rounded transition font-medium"
-                        onClick={handleLogout}
-                    >
-                        Cerrar sesión
-                    </button>
+
+                <div className="flex items-center gap-4 bg-red-500 hover:bg-red-600 p-2 rounded transition font-medium " onClick={handleLogout}>
+                    <img src={LogOut} alt="Logout icon" className="w-5 h-5 filter inline-block mr-2" />
+                    <p>Cerrar sesión</p>
                 </div>
+
             </aside>
 
             {/* Sidebar móvil con overlay */}
@@ -215,20 +215,18 @@ export default function SideBar() {
                             className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white flex items-center gap-4 cursor-pointer"
                             onClick={() => setVisible(false) || navigate(option.path)}
                         >
-                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter brightness-" />
+                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter" />
                             <p>{option.name}</p>
                         </div>
                     ))}
                 </nav>
 
-                <div className="mt-auto">
-                    <button
-                        className="w-full bg-red-500 hover:bg-red-600 p-3 rounded transition font-medium"
-                        onClick={handleLogout}
-                    >
-                        Cerrar sesión
-                    </button>
+
+                <div className="flex items-center gap-4 bg-red-500 hover:bg-red-600 p-2 rounded transition font-medium " onClick={handleLogout}>
+                    <img src={LogOut} alt="Logout icon" className="w-5 h-5 filter inline-block mr-2" />
+                    <p>Cerrar sesión</p>
                 </div>
+                
             </aside>
 
             {/* Overlay para móvil */}

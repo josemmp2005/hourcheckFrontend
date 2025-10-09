@@ -4,8 +4,8 @@ import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import jsQR from "jsqr";
 import API_BASE_URL from "../config/api";
-import timerUpIcon from "../assets/timer-up-icon.svg";
-import timerDownIcon from "../assets/timer-down-icon.svg";
+import timerUpIcon from "../assets/icons/timer-up-icon.svg";
+import timerDownIcon from "../assets/icons/timer-down-icon.svg";
 import LoadingOverlay from "./LoadingOverlay";
 
 export default function Clock() {
@@ -21,6 +21,53 @@ export default function Clock() {
     const [clockStatus, setClockStatus] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [streamReady, setStreamReady] = useState(null);
+    const [serverTime, setServerTime] = useState(null);
+
+
+    const getServerTime = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch(`${API_BASE_URL}/server-time`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setServerTime(new Date(data.timestamp));
+            }
+        } catch (error) {
+            console.error("Error fetching server time:", error);
+            // Fallback a hora local si falla
+            setServerTime(new Date());
+        }
+    };
+
+    useEffect(() => {
+        // Obtener hora inicial del servidor
+        getServerTime();
+
+        // Actualizar cada segundo
+        const timeInterval = setInterval(() => {
+            if (serverTime) {
+                setServerTime(prev => new Date(prev.getTime() + 1000));
+            }
+        }, 1000);
+
+        // Sincronizar con servidor cada 5 minutos
+        const syncInterval = setInterval(() => {
+            getServerTime();
+        }, 5 * 60 * 1000);
+
+        return () => {
+            clearInterval(timeInterval);
+            clearInterval(syncInterval);
+        };
+    }, [serverTime]);
+
 
 
     // Función que maneja la apertura de la cámara
@@ -187,10 +234,10 @@ export default function Clock() {
             return (
                 <section className="min-h-screen flex items-center justify-center">
                     <Header />
-                        <div className="flex flex-col items-center">
-                            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6 border-secondary"></div>
-                            <p className="text-gray-600">Verificando estado...</p>
-                        </div>
+                    <div className="flex flex-col items-center">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4  mb-6 border-secondary"></div>
+                        <p className="text-gray-600">Verificando estado...</p>
+                    </div>
                     <Toolbar />
                 </section>
             );
@@ -199,111 +246,132 @@ export default function Clock() {
         return (
             <section className="min-h-screen flex flex-col">
                 <Header />
-                    <section className="pt-30">
-                        <div className="text-center mb-8">
-                            <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                                {clockStatus === 'in' ? (
-                                    <div className="flex items-center justify-center gap-5">
-                                        <p>Clock In</p>
+                <section className="pt-30">
+                    <h2 className="text-3xl font-bold text-center py-4 ">
+                        {serverTime ? serverTime.toLocaleTimeString('es-ES', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        }) : 'Cargando...'}
+                    </h2>
+                    <div className="flex flex-col items-center">
+                        {!cameraOpen ? (
+                            <div
+                                className={`w-full max-w-xs mx-auto ${clockStatus === 'in'
+                                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+                                    : 'bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700'
+                                    } text-white px-6 py-4 rounded-xl shadow-lg transition-all duration-200 font-semibold cursor-pointer text-center`}
+                                onClick={handleOpenCamera}
+                            >
+                                <p>Abrir Cámara</p>
+                            </div>
+                        ) : (
+                            <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full">
+                                <div className="text-center mb-4">
+                                    <h3 className="text-lg font-semibold text-gray-800">
+                                        🔍 Escaneando...
+                                    </h3>
+                                    <p className="text-sm text-gray-600">
+                                        Apunta la cámara hacia el código QR
+                                    </p>
+                                </div>
+                                <div className="relative">
+                                    <video
+                                        ref={videoRef}
+                                        autoPlay
+                                        className="w-full rounded-xl border-4 border-blue-200"
+                                    />
+                                    {/* Marco del QR */}
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-32 h-32 border-4 border-white border-dashed rounded-lg animate-pulse"></div>
                                     </div>
-                                ) : (
-                                    <div className="flex items-center justify-center gap-5">
-                                        <p>Clock Out</p>
+                                </div>
+                                <canvas ref={canvasRef} style={{ display: "none" }} />
+
+                                {/* Botón para cerrar cámara */}
+                                <button
+                                    className="w-full mt-4 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold"
+                                    onClick={handleCloseCamera}
+                                >
+                                    ❌ Cerrar Cámara
+                                </button>
+                            </div>
+                        )}
+
+
+
+                        {qrResult && (
+                            <div className={`mt-6 bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border-l-4 ${clockStatus === 'in' ? 'border-green-500' : 'border-red-500'}`}>
+                                <div className="flex items-center">
+                                    <div className={`w-12 h-12 ${clockStatus === 'in' ? 'bg-green-100' : 'bg-red-100'} rounded-full flex items-center justify-center mr-4`}>
+                                        <svg className={`w-6 h-6 ${clockStatus === 'in' ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
                                     </div>
-                                )}
+                                    <div>
+                                        <h4 className="text-lg font-semibold text-gray-800">
+                                            {clockStatus === 'in' ? '✅ Procesando entrada...' : '🔴 Procesando salida...'}
+                                        </h4>
+                                        <p className="text-sm text-gray-600 break-all">
+                                            <strong>Código:</strong> {qrResult}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="w-full px-4 sm:px-8 mt-10 flex flex-col items-center bg-white">
+                        <div className="w-full max-w-2xl">
+                            <h2 className="text-xl font-bold bg-white rounded-t-lg p-4 border-b border-gray-300">
+                                Resumen del Día
                             </h2>
-                            <p className="text-lg text-gray-600 mb-2">
-                                {clockStatus === 'in'
-                                    ? 'Escanea tu código QR para registrar tu entrada'
-                                    : 'Escanea tu código QR para registrar tu salida'
-                                }
-                            </p>
-                            <p className="text-sm text-gray-500">
-                                Alinea el código QR dentro del marco de la cámara
-                            </p>
+                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
+                                <p className="text-gray-700">Entrada:</p>
+                                <p className="font-semibold">XX:XXh</p>
+                            </div>
+                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
+                                <p className="text-gray-700">Salida:</p>
+                                <p className="font-semibold">XX:XXh</p>
+                            </div>
+                            <div className="flex justify-between bg-white p-4 w-full rounded-b-lg border-b border-gray-300">
+                                <p className="text-gray-700">Total Trabajado:</p>
+                                <p className="font-semibold text-primary">XX:XXh</p>
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="flex flex-col items-center">
-                            {!cameraOpen ? (
-                                <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
-                                    <div className="mb-6">
-                                        <div className={`w-24 h-24 ${clockStatus === 'in' ? 'bg-green-100' : 'bg-red-100'} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                                            <svg className={`w-12 h-12 ${clockStatus === 'in' ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                                            {clockStatus === 'in' ? 'Registrar Entrada' : 'Registrar Salida'}
-                                        </h3>
-                                        <p className="text-gray-600 text-sm">
-                                            Presiona el botón para iniciar el escaneo
-                                        </p>
-                                    </div>
-                                    <button
-                                        className={`w-full ${clockStatus === 'in'
-                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
-                                            : 'bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700'
-                                            } text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold`}
-                                        onClick={handleOpenCamera}
-                                    >
-                                        📷 Abrir Cámara
-                                    </button>
+                    <div className="w-full px-4 sm:px-8 mt-10 flex flex-col items-center bg-white">
+                        <div className="w-full max-w-2xl">
+                            <h2 className="text-xl font-bold bg-white rounded-t-lg p-4 border-b border-gray-300">
+                                Historial de Fichajes
+                            </h2>
+                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
+                                <div>
+                                    <p className="font-semibold">Ayer</p>
+                                    <p className="text-gray-700">8:00 - 16:20</p>
                                 </div>
-                            ) : (
-                                <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full">
-                                    <div className="text-center mb-4">
-                                        <h3 className="text-lg font-semibold text-gray-800">
-                                            🔍 Escaneando...
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            Apunta la cámara hacia el código QR
-                                        </p>
-                                    </div>
-                                    <div className="relative">
-                                        <video
-                                            ref={videoRef}
-                                            autoPlay
-                                            className="w-full rounded-xl border-4 border-blue-200"
-                                        />
-                                        {/* Marco del QR */}
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="w-32 h-32 border-4 border-white border-dashed rounded-lg animate-pulse"></div>
-                                        </div>
-                                    </div>
-                                    <canvas ref={canvasRef} style={{ display: "none" }} />
-                                    
-                                    {/* Botón para cerrar cámara */}
-                                    <button
-                                        className="w-full mt-4 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold"
-                                        onClick={handleCloseCamera}
-                                    >
-                                        ❌ Cerrar Cámara
-                                    </button>
+                                <p className="text-gray-700">8h 20min:</p>
+                            </div>
+                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
+                                <div>
+                                    <p className="font-semibold">Ayer</p>
+                                    <p className="text-gray-700">8:00 - 16:20</p>
                                 </div>
-                            )}
-
-                            {qrResult && (
-                                <div className={`mt-6 bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border-l-4 ${clockStatus === 'in' ? 'border-green-500' : 'border-red-500'}`}>
-                                    <div className="flex items-center">
-                                        <div className={`w-12 h-12 ${clockStatus === 'in' ? 'bg-green-100' : 'bg-red-100'} rounded-full flex items-center justify-center mr-4`}>
-                                            <svg className={`w-6 h-6 ${clockStatus === 'in' ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-lg font-semibold text-gray-800">
-                                                {clockStatus === 'in' ? '✅ Procesando entrada...' : '🔴 Procesando salida...'}
-                                            </h4>
-                                            <p className="text-sm text-gray-600 break-all">
-                                                <strong>Código:</strong> {qrResult}
-                                            </p>
-                                        </div>
-                                    </div>
+                                <p className="text-gray-700">8h 20min:</p>
+                            </div>
+                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
+                                <div>
+                                    <p className="font-semibold">Ayer</p>
+                                    <p className="text-gray-700">8:00 - 16:20</p>
                                 </div>
-                            )}
+                                <p className="text-gray-700">8h 20min:</p>
+                            </div>
+                            
                         </div>
-                    </section>
+                    </div>
+
+                </section>
                 <Toolbar />
             </section>
         )

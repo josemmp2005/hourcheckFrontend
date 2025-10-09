@@ -1,4 +1,5 @@
 import Header from './Header';
+import Toolbar from './Toolbar';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../config/api.js';
@@ -138,6 +139,7 @@ export default function Break(){
                         </button>
                     </div>
                 </div>
+                <Toolbar />
             </>
         );
     }
@@ -180,6 +182,7 @@ export default function Break(){
                     )}
                 </div>
             </div>
+            <Toolbar />
         </>
     );
 }

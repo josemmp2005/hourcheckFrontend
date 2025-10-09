@@ -135,6 +135,9 @@ export default function SelectCompany() {
                         </div>
                     ))}
                 </div>
+                <div onClick={() => navigate('/create-new-company')} className="bg-white p-3 rounded-2xl border border-r-secondary border-b-secondary border-l-0 border-t-0 max-w-xs w-15 h-15 cursor-pointer fixed bottom-30 right-10 flex items-center justify-center hover:scale-110 hover:shadow-xl transition-all duration-200">
+                    <p className="text-3xl font-bold">+</p>
+                </div>
             </div>
             <Toolbar />
         </section>

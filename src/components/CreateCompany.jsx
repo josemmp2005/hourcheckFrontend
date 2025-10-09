@@ -1,4 +1,5 @@
 import Header from "./Header.jsx";
+import Toolbar from "./Toolbar.jsx";
 import { useState } from "react";
 
 export default function CreateCompany() {
@@ -69,6 +70,7 @@ export default function CreateCompany() {
                     <button type="submit">Crear Empresa</button>
                 </form>
             </div>
+            <Toolbar />
         </>
     );
 }
