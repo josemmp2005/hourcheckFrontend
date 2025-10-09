@@ -246,15 +246,24 @@ export default function Clock() {
         return (
             <section className="min-h-screen flex flex-col">
                 <Header />
-                <section className="pt-30">
-                    <h2 className="text-3xl font-bold text-center py-4 ">
-                        {serverTime ? serverTime.toLocaleTimeString('es-ES', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit'
-                        }) : 'Cargando...'}
-                    </h2>
-                    <div className="flex flex-col items-center">
+                <section className="pt-25">
+                    <div>
+                        <h2 className="text-3xl font-bold text-center py-4 ">
+                            {serverTime ? serverTime.toLocaleTimeString('es-ES', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit'
+                            }) : 'Cargando...'}
+                        </h2>
+                        <p className="text-center text-gray-600 mb-6">
+                            {serverTime ? serverTime.toLocaleDateString('es-ES', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            }) : 'Cargando...'}
+                        </p>
+                    </div>
+                    <div className="flex flex-col items-center px-4 sm:px-8">
                         {!cameraOpen ? (
                             <div
                                 className={`w-full max-w-xs mx-auto ${clockStatus === 'in'

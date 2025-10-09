@@ -3,8 +3,9 @@ import Toolbar from './Toolbar';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../config/api.js';
+import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts';
 
-export default function Break(){
+export default function Break() {
 
     const breakStatusChecked = useRef(false);
     const token = localStorage.getItem('token');
@@ -13,10 +14,20 @@ export default function Break(){
     const [breakStatus, setBreakStatus] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [canTakeBreak, setCanTakeBreak] = useState(false);
+    const porcentaje = 70; // ← controla el valor mostrado (0–100)
+
+    const data = [
+        {
+            name: 'Progreso',
+            uv: porcentaje,
+            fill: '#00C49F', // color del progreso
+        },
+    ];
+
 
     const checkBreakStatus = async () => {
         if (breakStatusChecked.current) return;
-        
+
         try {
             setIsLoading(true);
             const response = await fetch(`${API_BASE_URL}/breaks/status/${companyId}`, {
@@ -27,7 +38,7 @@ export default function Break(){
                 },
             });
             const data = await response.json();
-            
+
             if (response.ok) {
                 setBreakStatus(data.onBreak ? 'onBreak' : 'notOnBreak');
                 setCanTakeBreak(true);
@@ -118,25 +129,62 @@ export default function Break(){
         return (
             <>
                 <Header />
-                <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-100 to-indigo-100 flex items-center justify-center">
-                    <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
-                        <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg className="w-12 h-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                            </svg>
-                        </div>
-                        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                            No puedes tomar un descanso
-                        </h2>
-                        <p className="text-gray-600 mb-6">
-                            Debes hacer clock-in primero para poder tomar un descanso.
-                        </p>
-                        <button 
-                            onClick={() => navigate("/clock-in")}
-                            className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-blue-700 transition-colors"
+                <div className=" flex items-center justify-center pt-20">
+                    <div
+                        style={{
+                            width: 200,
+                            height: 200,
+                            position: 'relative',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {/* Porcentaje encima del círculo */}
+                        <div
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -60%)', // sube el texto ligeramente
+                                fontSize: '28px',
+                                fontWeight: 'bold',
+                                color: '#333',
+                                zIndex: 2,
+                            }}
                         >
-                            Ir a Clock-In
-                        </button>
+                            {porcentaje}%
+                        </div>
+
+                        {/* Gráfico circular */}
+                        <ResponsiveContainer>
+                            <RadialBarChart
+                                cx="50%"
+                                cy="50%"
+                                innerRadius="70%"
+                                outerRadius="100%"
+                                barSize={20}
+                                data={data}
+                                startAngle={90}
+                                endAngle={-270}
+                            >
+                                {/* Círculo gris de fondo */}
+                                <RadialBar
+                                    data={[{ uv: 100 }]}
+                                    dataKey="uv"
+                                    fill="#e0e0e0"
+                                    clockWise
+                                    cornerRadius={10}
+                                />
+                                {/* Progreso de color */}
+                                <RadialBar
+                                    dataKey="uv"
+                                    clockWise
+                                    cornerRadius={10}
+                                    fill={data[0].fill}
+                                />
+                            </RadialBarChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
                 <Toolbar />
@@ -154,12 +202,12 @@ export default function Break(){
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    
+
                     {breakStatus === 'notOnBreak' && (
                         <>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4">Iniciar Descanso</h2>
                             <p className="text-gray-600 mb-6">¿Quieres iniciar tu descanso ahora?</p>
-                            <button 
+                            <button
                                 onClick={startBreak}
                                 className="w-full bg-green-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-green-700 transition-colors"
                             >
@@ -167,12 +215,12 @@ export default function Break(){
                             </button>
                         </>
                     )}
-                    
+
                     {breakStatus === 'onBreak' && (
                         <>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4">Finalizar Descanso</h2>
                             <p className="text-gray-600 mb-6">Estás actualmente en descanso. ¿Quieres finalizarlo?</p>
-                            <button 
+                            <button
                                 onClick={endBreak}
                                 className="w-full bg-red-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-red-700 transition-colors"
                             >
