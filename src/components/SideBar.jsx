@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState, useRef } from "react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import API_BASE_URL from "../config/api.js";
 import logo from "../assets/logo.png";
 import homeIcon from '../assets/icons/home-icon.svg';
@@ -24,7 +24,18 @@ export default function SideBar() {
     const companyId = localStorage.getItem("company_id");
     const [companyData, setCompanyData] = useState(null);
     const [userData, setUserData] = useState(null);
+    const location = useLocation();
+    const [activePath, setActivePath] = useState("");
 
+    const isActive = (path) => {
+        setActivePath(location.pathname);
+    };
+
+    useEffect(() => {
+        isActive(location.pathname);
+    }, [location]);
+
+    console.log("Active Path:", activePath);
 
     const getCompanyData = async () => {
         try {
@@ -171,6 +182,16 @@ export default function SideBar() {
                 {/* Sidebar desktop */}
                 <nav className="flex flex-col gap-4 flex-1">
                     {sidebarOptions.map((option) => (
+                        option.path === activePath ?
+                        <div
+                            key={option.id}
+                            className="bg-primary text-white p-3 rounded transition flex items-center gap-4 cursor-pointer"
+                            onClick={() => navigate(option.path)}
+                        >
+                            <img src={option.icon} alt={`${option.name} icon`} className="w-6 h-6 filter brightness-0 invert" />
+                            <p>{option.name}</p>
+                        </div>
+                        :
                         <div
                             key={option.id}
                             className="hover:bg-secondary p-3 rounded transition hover:text-white flex items-center gap-4 cursor-pointer"
@@ -213,6 +234,16 @@ export default function SideBar() {
                 {/* Sidebar móvil */}
                 <nav className="flex flex-col gap-4 flex-1">
                     {sidebarOptions.map((option) => (
+                        option.path === activePath ?
+                        <div
+                            key={option.id}
+                            className="bg-primary text-white p-3 rounded transition flex items-center gap-4 cursor-pointer"
+                            onClick={() => setVisible(false) || navigate(option.path)}
+                        >
+                            <img src={option.icon} alt={`${option.name} icon`} className="w-5 h-5 filter brightness-0 invert" />
+                            <p>{option.name}</p>
+                        </div>
+                        :
                         <div
                             key={option.id}
                             className="hover:bg-secondary p-3 rounded transition text-primary hover:text-white flex items-center gap-4 cursor-pointer"
