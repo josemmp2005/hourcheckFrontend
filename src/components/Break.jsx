@@ -130,62 +130,7 @@ export default function Break() {
             <>
                 <Header />
                 <div className=" flex items-center justify-center pt-20">
-                    <div
-                        style={{
-                            width: 200,
-                            height: 200,
-                            position: 'relative',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        {/* Porcentaje encima del círculo */}
-                        <div
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -60%)', // sube el texto ligeramente
-                                fontSize: '28px',
-                                fontWeight: 'bold',
-                                color: '#333',
-                                zIndex: 2,
-                            }}
-                        >
-                            {porcentaje}%
-                        </div>
-
-                        {/* Gráfico circular */}
-                        <ResponsiveContainer>
-                            <RadialBarChart
-                                cx="50%"
-                                cy="50%"
-                                innerRadius="70%"
-                                outerRadius="100%"
-                                barSize={20}
-                                data={data}
-                                startAngle={90}
-                                endAngle={-270}
-                            >
-                                {/* Círculo gris de fondo */}
-                                <RadialBar
-                                    data={[{ uv: 100 }]}
-                                    dataKey="uv"
-                                    fill="#e0e0e0"
-                                    clockWise
-                                    cornerRadius={10}
-                                />
-                                {/* Progreso de color */}
-                                <RadialBar
-                                    dataKey="uv"
-                                    clockWise
-                                    cornerRadius={10}
-                                    fill={data[0].fill}
-                                />
-                            </RadialBarChart>
-                        </ResponsiveContainer>
-                    </div>
+                    <p>asd</p>
                 </div>
                 <Toolbar />
             </>
@@ -193,14 +138,46 @@ export default function Break() {
     }
 
     return (
-        <>
+        <section className="pt-25 bg-background min-h-screen">
             <Header />
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-100 to-indigo-100 flex items-center justify-center">
-                <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
-                    <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+            <div className="flex flex-col items-center">
+                <div className="p-8 pt-0 max-w-md w-full text-center">
+                    <div className="relative flex items-center justify-center w-52 h-52 mx-auto mb-6">
+                        {/* Porcentaje encima del círculo */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-3xl font-bold text-gray-800 z-10">
+                            {porcentaje}%
+                        </div>
+                        {/* Gráfico circular */}
+                        <div className="w-full h-full">
+                            <ResponsiveContainer>
+                                <RadialBarChart
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius="70%"
+                                    outerRadius="100%"
+                                    barSize={20}
+                                    data={data}
+                                    startAngle={90}
+                                    endAngle={-270}
+                                >
+                                    {/* Círculo gris de fondo */}
+                                    <RadialBar
+                                        data={[{ uv: 100 }]}
+                                        dataKey="uv"
+                                        fill="#e0e0e0"
+                                        clockWise
+                                        cornerRadius={10}
+                                    />
+                                    {/* Progreso de color */}
+                                    <RadialBar
+                                        dataKey="uv"
+                                        clockWise
+                                        cornerRadius={10}
+                                        fill={data[0].fill}
+                                    />
+                                </RadialBarChart>
+                            </ResponsiveContainer>
+                        </div>
                     </div>
 
                     {breakStatus === 'notOnBreak' && (
@@ -218,6 +195,7 @@ export default function Break() {
 
                     {breakStatus === 'onBreak' && (
                         <>
+                            <p>Descanso empezo a las XX:XXh</p>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4">Finalizar Descanso</h2>
                             <p className="text-gray-600 mb-6">Estás actualmente en descanso. ¿Quieres finalizarlo?</p>
                             <button
@@ -229,8 +207,43 @@ export default function Break() {
                         </>
                     )}
                 </div>
+
+                <div className='w-full m-5 max-w-2xl p-4 sm:px-8 mt-10 rounded-xl flex flex-col'>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Daily Summary</h2>
+                    <div className='w-full flex justify-around mb-4'>
+                        <div className='flex flex-col  bg-blue-100 p-4 rounded-xl w-1/2 mr-2'>
+                            <h3 className="text-lg w-full">Work Time</h3>
+                            <p className="text-gray-700 text-xl font-bold">Xh  XXm</p>
+                        </div>
+                        <div className='flex flex-col  bg-blue-100 p-4 rounded-xl w-1/2 ml-2'>
+                            <h3 className="text-lg w-full">Break Time</h3>
+                            <p className="text-gray-700 text-xl font-bold">XXm  XXs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='w-full m-5 max-w-2xl p-4 pt-0 sm:px-8 rounded-xl flex flex-col mb-20'>
+                    <div className='w-full flex justify-between items-center mb-4'>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Break History</h2>
+                        <p className="text-blue-400 hover:underline cursor-pointer">See All</p>
+                    </div>
+                    <div className='flex items-center justify-between mb-4 w-full bg-white p-4 rounded-xl'>
+                        <div>
+                            <h3 className="text-lg font-bold">Lunch Break</h3>
+                            <p className="text-gray-700">Xh  XXm</p>
+                        </div>
+                        <p className="text-gray-500">XXm in</p>
+                    </div>
+                    <div className='flex items-center justify-between mb-4 w-full bg-white p-4 rounded-xl'>
+                        <div>
+                            <h3 className="text-lg font-bold">Lunch Break</h3>
+                            <p className="text-gray-700">Xh  XXm</p>
+                        </div>
+                        <p className="text-gray-500">XXm in</p>
+                    </div>
+                </div>
             </div>
             <Toolbar />
-        </>
+        </section>
     );
 }

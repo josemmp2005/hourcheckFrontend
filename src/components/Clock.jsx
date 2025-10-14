@@ -7,6 +7,7 @@ import API_BASE_URL from "../config/api";
 import timerUpIcon from "../assets/icons/timer-up-icon.svg";
 import timerDownIcon from "../assets/icons/timer-down-icon.svg";
 import LoadingOverlay from "./LoadingOverlay";
+import { BarChart, Bar, ResponsiveContainer } from 'recharts';
 
 export default function Clock() {
     const clockInStatusChecked = useRef(false);
@@ -22,6 +23,52 @@ export default function Clock() {
     const [isLoading, setIsLoading] = useState(true);
     const [streamReady, setStreamReady] = useState(null);
     const [serverTime, setServerTime] = useState(null);
+
+
+    const data = [
+        {
+            name: 'Page A',
+            uv: 4000,
+            pv: 2400,
+            amt: 2400,
+        },
+        {
+            name: 'Page B',
+            uv: 3000,
+            pv: 1398,
+            amt: 2210,
+        },
+        {
+            name: 'Page C',
+            uv: 2000,
+            pv: 9800,
+            amt: 2290,
+        },
+        {
+            name: 'Page D',
+            uv: 2780,
+            pv: 3908,
+            amt: 2000,
+        },
+        {
+            name: 'Page E',
+            uv: 1890,
+            pv: 4800,
+            amt: 2181,
+        },
+        {
+            name: 'Page F',
+            uv: 2390,
+            pv: 3800,
+            amt: 2500,
+        },
+        {
+            name: 'Page G',
+            uv: 3490,
+            pv: 4300,
+            amt: 2100,
+        },
+    ];
 
 
     const getServerTime = async () => {
@@ -244,7 +291,7 @@ export default function Clock() {
         }
 
         return (
-            <section className="min-h-screen flex flex-col">
+            <section className="min-h-screen flex flex-col bg-background">
                 <Header />
                 <section className="pt-25">
                     <div>
@@ -278,7 +325,7 @@ export default function Clock() {
                             <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full">
                                 <div className="text-center mb-4">
                                     <h3 className="text-lg font-semibold text-gray-800">
-                                        🔍 Escaneando...
+                                        Escaneando...
                                     </h3>
                                     <p className="text-sm text-gray-600">
                                         Apunta la cámara hacia el código QR
@@ -299,10 +346,10 @@ export default function Clock() {
 
                                 {/* Botón para cerrar cámara */}
                                 <button
-                                    className="w-full mt-4 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold"
+                                    className="w-full mt-4 bg-red-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 font-semibold"
                                     onClick={handleCloseCamera}
                                 >
-                                    ❌ Cerrar Cámara
+                                    Cerrar Cámara
                                 </button>
                             </div>
                         )}
@@ -330,29 +377,27 @@ export default function Clock() {
                         )}
                     </div>
 
-                    <div className="w-full px-4 sm:px-8 mt-10 flex flex-col items-center bg-white">
-                        <div className="w-full max-w-2xl">
-                            <h2 className="text-xl font-bold bg-white rounded-t-lg p-4 border-b border-gray-300">
-                                Resumen del Día
-                            </h2>
-                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
-                                <p className="text-gray-700">Entrada:</p>
-                                <p className="font-semibold">XX:XXh</p>
-                            </div>
-                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
-                                <p className="text-gray-700">Salida:</p>
-                                <p className="font-semibold">XX:XXh</p>
-                            </div>
-                            <div className="flex justify-between bg-white p-4 w-full rounded-b-lg border-b border-gray-300">
-                                <p className="text-gray-700">Total Trabajado:</p>
-                                <p className="font-semibold text-primary">XX:XXh</p>
-                            </div>
+                    <div className="p-4 pt-0 m-5 sm:px-8 mt-10 rounded-xl flex flex-col items-center bg-white shadow-lg">
+                        <h2 className="text-xl font-bold bg-white p-4 border-b border-gray-300 text-left w-full max-w-2xl">
+                            Resumen del Día
+                        </h2>
+                        <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
+                            <p className="text-gray-700">Entrada:</p>
+                            <p className="font-semibold">XX:XXh</p>
+                        </div>
+                        <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
+                            <p className="text-gray-700">Salida:</p>
+                            <p className="font-semibold">XX:XXh</p>
+                        </div>
+                        <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
+                            <p className="text-gray-700">Total Trabajado:</p>
+                            <p className="font-semibold text-primary">XX:XXh</p>
                         </div>
                     </div>
 
-                    <div className="w-full px-4 sm:px-8 mt-10 flex flex-col items-center bg-white">
+                    <div className="p-4 pt-0 m-5 sm:px-8 mt-10 rounded-xl flex flex-col items-center bg-white shadow-lg">
                         <div className="w-full max-w-2xl">
-                            <h2 className="text-xl font-bold bg-white rounded-t-lg p-4 border-b border-gray-300">
+                            <h2 className="text-xl font-bold bg-white p-4 border-b border-gray-300">
                                 Historial de Fichajes
                             </h2>
                             <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
@@ -376,10 +421,24 @@ export default function Clock() {
                                 </div>
                                 <p className="text-gray-700">8h 20min:</p>
                             </div>
-                            
+
                         </div>
                     </div>
 
+                    <div className="p-4 pt-0 m-5 sm:px-8 mt-10 rounded-xl flex flex-col items-center bg-white shadow-lg mb-20">
+                        <div className="w-full max-w-2xl">
+                            <h2 className="text-xl font-bold bg-white p-4 border-b border-gray-300">
+                                Rendimiento Semanal
+                            </h2>
+                            <div className="w-full p-4" style={{ height: '300px' }}>
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={data}>
+                                        <Bar dataKey="uv" fill="#10b981" />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    </div>
                 </section>
                 <Toolbar />
             </section>
