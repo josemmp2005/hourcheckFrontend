@@ -1,0 +1,66 @@
+/* Ocultar el texto del slot */
+
+button[part*="previous"] slot,
+button[part*="next"] slot {
+    display: none !important;
+}
+
+
+/* Personalizar los botones directamente */
+
+button[part*="previous"] {
+    position: relative !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: #f9fafb !important;
+    border: 1px solid #d1d5db !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+button[part*="next"] {
+    position: relative !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: #f9fafb !important;
+    border: 1px solid #d1d5db !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+
+/* Agregar el contenido personalizado */
+
+button[part*="previous"]:after {
+    content: '<' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #374151 !important;
+}
+
+button[part*="next"]:after {
+    content: '>' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #374151 !important;
+}
+
+
+/* Hover effects */
+
+button[part*="previous"]:hover,
+button[part*="next"]:hover {
+    background: #f3f4f6 !important;
+    border-color: #9ca3af !important;
+    transform: scale(1.05) !important;
+}

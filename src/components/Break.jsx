@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../config/api.js';
 import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts';
 
+
 export default function Break() {
 
     const breakStatusChecked = useRef(false);
@@ -141,10 +142,10 @@ export default function Break() {
         <section className="pt-25 bg-background min-h-screen">
             <Header />
             <div className="flex flex-col items-center">
-                <div className="p-8 pt-0 max-w-md w-full text-center">
+                <div className="p-8 pt-0 <max-w-md w-full text-center">
                     <div className="relative flex items-center justify-center w-52 h-52 mx-auto mb-6">
                         {/* Porcentaje encima del círculo */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-3xl font-bold text-gray-800 z-10">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-3xl font-bold text-gray-800 z-1">
                             {porcentaje}%
                         </div>
                         {/* Gráfico circular */}

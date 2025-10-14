@@ -10,6 +10,9 @@ import companiesIcon from '../assets/icons/companies-icon.svg';
 import breakIcon from '../assets/icons/break-icon.svg';
 import profileIcon from '../assets/icons/profile-icon.svg';
 import LogOut from "../assets/icons/logout-icon.svg";
+import vacationIcon from "../assets/icons/vacation-icon.svg";
+import absenceIcon from "../assets/icons/absence-icon.svg";
+import infoIcon from "../assets/icons/info-icon.svg";
 
 
 export default function SideBar() {
@@ -74,9 +77,9 @@ export default function SideBar() {
     const adminOptions = [
         { id: 1, name: "Clock", path: "/clock", icon: timerIcon },
         { id: 2, name: "Break", path: "/break", icon: breakIcon },
-        { id: 3, name: "Absences", path: "/absences", icon: companiesIcon },
-        { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
-        { id: 5, name: "Info", path: "/info", icon: companiesIcon },
+        { id: 3, name: "Absences", path: "/absences", icon: absenceIcon },
+        { id: 4, name: "Vacations", path: "/vacations", icon: vacationIcon },
+        { id: 5, name: "Info", path: "/info", icon: infoIcon },
         { id: 6, name: "Admin Panel", path: "/admin-panel", icon: companiesIcon },
         { id: 7, name: "Select Company", path: "/select-company", icon: companiesIcon },
         { id: 8, name: "Dashboard", path: "/dashboard", icon: homeIcon },
@@ -86,9 +89,9 @@ export default function SideBar() {
     const managerOptions = [
         { id: 1, name: "Clock", path: "/clock", icon: timerIcon },
         { id: 2, name: "Break", path: "/break", icon: breakIcon },
-        { id: 3, name: "Absences", path: "/absences", icon: companiesIcon },
-        { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
-        { id: 5, name: "Info", path: "/info", icon: companiesIcon },
+        { id: 3, name: "Absences", path: "/absences", icon: absenceIcon },
+        { id: 4, name: "Vacations", path: "/vacations", icon: vacationIcon },
+        { id: 5, name: "Info", path: "/info", icon: infoIcon },
         { id: 6, name: "Manager Panel", path: "/manager", icon: companiesIcon },
         { id: 7, name: "Select Company", path: "/select-company", icon: companiesIcon },
         { id: 8, name: "Dashboard", path: "/dashboard", icon: homeIcon },
@@ -98,9 +101,9 @@ export default function SideBar() {
     const userOptions = [
         { id: 1, name: "Clock", path: "/clock", icon: timerIcon },
         { id: 2, name: "Break", path: "/break", icon: breakIcon },
-        { id: 3, name: "Absences", path: "/absences", icon: breakIcon },
-        { id: 4, name: "Vacations", path: "/vacations", icon: companiesIcon },
-        { id: 5, name: "Info", path: "/info", icon: companiesIcon },
+        { id: 3, name: "Absences", path: "/absences", icon: absenceIcon },
+        { id: 4, name: "Vacations", path: "/vacations", icon: vacationIcon },
+        { id: 5, name: "Info", path: "/info", icon: infoIcon },
         { id: 6, name: "Select Company", path: "/select-company", icon: companiesIcon },
         { id: 7, name: "Dashboard", path: "/dashboard", icon: homeIcon },
         { id: 8, name: "Profile", path: "/profile", icon: profileIcon }
