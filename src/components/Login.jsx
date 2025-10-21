@@ -1,6 +1,6 @@
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GoogleLogin } from '@react-oauth/google';
 import API_BASE_URL from "../config/api.js";
 import loginImage from "../assets/login-image.png";
@@ -12,8 +12,22 @@ export default function Login() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const navigate = useNavigate();
   const invitationToken = localStorage.getItem("invitation-token");
+
+  // Precargar la imagen de fondo
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      setImageLoaded(true);
+    };
+    img.onerror = () => {
+      // Si falla la carga, continuar sin imagen de fondo
+      setImageLoaded(true);
+    };
+    img.src = loginImage;
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -43,11 +57,23 @@ export default function Login() {
     }
   };
 
+  // Mostrar loading mientras la imagen se carga o durante el login
+  if (!imageLoaded) {
+    return <LoadingOverlay isVisible={true} message="Cargando..." />;
+  }
+
   return (
     <>
-          <LoadingOverlay isVisible={isLoading} message="Cargando datos..." />
+      <LoadingOverlay isVisible={isLoading} message="Iniciando sesión..." />
 
-      <section className="min-h-screen flex items-center justify-center p-5 lg:justify-around" style={{ backgroundImage: `url(${loginImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section 
+        className="min-h-screen flex items-center justify-center p-5 lg:justify-around" 
+        style={{ 
+          backgroundImage: `url(${loginImage})`, 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center' 
+        }}
+      >
 
         <div className="hidden lg:block mb-20">
           <a href="/"><h1 className="text-6xl font-bold text-white">HourCheck</h1></a>
@@ -154,9 +180,6 @@ export default function Login() {
           </form>
         </div>
       </section>
-
-      {/* Componente reutilizable */}
-      <LoadingOverlay isVisible={isLoading} message="Iniciando sesión..." />
 
       <style jsx>{`
         @keyframes shake {
