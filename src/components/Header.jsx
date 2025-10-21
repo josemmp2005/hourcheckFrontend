@@ -67,7 +67,7 @@ export default function Header() {
       <img
         src={companyData && companyData.photo_url !== null ? companyData.photo_url : logo}
         alt="User"
-        className="w-12 h-12 object-cover lg:hidden"
+        className="w-12 h-12 object-cover lg:hidden rounded-full border-2 border-gray-300"
       />
     </header>
   );
