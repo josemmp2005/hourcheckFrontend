@@ -23,6 +23,9 @@ export default function Clock() {
     const [isLoading, setIsLoading] = useState(true);
     const [streamReady, setStreamReady] = useState(null);
     const [serverTime, setServerTime] = useState(null);
+    const [todayClockIn, setTodayClockIn] = useState(null);
+    const [todayClockOut, setTodayClockOut] = useState(null);
+    const [lastsClocks, setLastsClocks] = useState([]);
 
 
     const data = [
@@ -71,6 +74,7 @@ export default function Clock() {
     ];
 
 
+    // Función para obtener la hora del servidor
     const getServerTime = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -116,6 +120,61 @@ export default function Clock() {
     }, [serverTime]);
 
 
+    const getTodayClock = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/clock/today`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ company_id: Number(companyId) })
+
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.data && data.data.length > 0) {
+                    const today = data.data[0];
+                    setTodayClockIn(today.check_in);
+                    setTodayClockOut(today.check_out);
+                    // Puedes agregar más lógica aquí si necesitas otros datos
+                    // console.log(todayClockIn, todayClockOut);
+                } else {
+                    setTodayClockIn(null);
+                    setTodayClockOut(null);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching today's clock data:", error);
+        }
+    }
+
+    const getLastsClocks = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/clock/last-three`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ company_id: Number(companyId) })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                // console.log(data["data"]);
+                setLastsClocks(data.data || []);
+                // console.log(lastsClocks);
+            }
+        } catch (error) {
+            console.error("Error fetching last three clocks:", error);
+        }
+    }
+
+
+    useEffect(() => {
+        getTodayClock();
+        getLastsClocks();
+    }, []);
 
     // Función que maneja la apertura de la cámara
     const handleOpenCamera = async () => {
@@ -276,6 +335,43 @@ export default function Clock() {
         setStreamReady(null);
     };
 
+    const calculateTotalHours = (clockIn, clockOut) => {
+        // Si no hay entrada o salida, retornar 0:00
+        if (!clockIn || !clockOut) {
+            return '0:00';
+        }
+
+        try {
+            // Crear objetos Date desde las cadenas de tiempo
+            const startTime = new Date(clockIn);
+            const endTime = new Date(clockOut);
+
+            // Validar que las fechas sean válidas
+            if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+                return '0:00';
+            }
+
+            // Calcular la diferencia en milisegundos
+            const timeDifferenceMs = endTime.getTime() - startTime.getTime();
+
+            // Si la diferencia es negativa (salida antes que entrada), retornar 0:00
+            if (timeDifferenceMs < 0) {
+                return '0:00';
+            }
+
+            // Convertir milisegundos a horas y minutos
+            const totalMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+
+            // Formatear como HH:MM
+            return `${hours}:${minutes.toString().padStart(2, '0')}`;
+        } catch (error) {
+            console.error('Error calculating total hours:', error);
+            return '0:00';
+        }
+    };
+
     if (workMode == "1") { // ESCANEO PRESENCIAL 
         if (isLoading) {
             return (
@@ -383,49 +479,54 @@ export default function Clock() {
                         </h2>
                         <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
                             <p className="text-gray-700">Entrada:</p>
-                            <p className="font-semibold">XX:XXh</p>
+                            <p className="font-semibold">{todayClockIn ? new Date(todayClockIn).toLocaleTimeString('es-ES', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            }) : 'No Registrado'}</p>
                         </div>
                         <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
                             <p className="text-gray-700">Salida:</p>
-                            <p className="font-semibold">XX:XXh</p>
+                            <p className="font-semibold">{todayClockOut ? new Date(todayClockOut).toLocaleTimeString('es-ES', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            }) : 'No Registrado'}</p>
                         </div>
                         <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300">
                             <p className="text-gray-700">Total Trabajado:</p>
-                            <p className="font-semibold text-primary">XX:XXh</p>
+                            <p className="font-semibold text-primary">{calculateTotalHours(todayClockIn, todayClockOut)} h</p>
                         </div>
                     </div>
 
                     <div className="p-4 pt-0 m-5 sm:px-8 mt-10 rounded-xl flex flex-col items-center bg-white shadow-lg">
                         <div className="w-full max-w-2xl">
-                            <h2 className="text-xl font-bold bg-white p-4 border-b border-gray-300">
-                                Historial de Fichajes
-                            </h2>
-                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
-                                <div>
-                                    <p className="font-semibold">Ayer</p>
-                                    <p className="text-gray-700">8:00 - 16:20</p>
-                                </div>
-                                <p className="text-gray-700">8h 20min:</p>
+                            <div className="flex justify-between items-center p-4 border-b border-gray-300">
+                                <h2 className="text-xl font-bold">Historial de Fichajes</h2>
+                                <p className="text-blue-400 hover:underline cursor-pointer" onClick={() => navigate("history")}>See All</p>
                             </div>
-                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
-                                <div>
-                                    <p className="font-semibold">Ayer</p>
-                                    <p className="text-gray-700">8:00 - 16:20</p>
-                                </div>
-                                <p className="text-gray-700">8h 20min:</p>
-                            </div>
-                            <div className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
-                                <div>
-                                    <p className="font-semibold">Ayer</p>
-                                    <p className="text-gray-700">8:00 - 16:20</p>
-                                </div>
-                                <p className="text-gray-700">8h 20min:</p>
-                            </div>
+                            {lastsClocks.length === 0 ? (
+                                <p className="text-gray-600 p-4">No hay fichajes recientes.</p>
+                            ) : (
+                                lastsClocks.map((clock) => (
+                                    <div key={clock.id} className="flex justify-between bg-white p-4 w-full border-b border-gray-300 items-center">
+                                        <div>
+                                            <p className="font-semibold">{new Date(clock.created_at).toLocaleDateString('es-ES')}</p>
+                                            <p className="text-gray-700">{new Date(clock.check_in).toLocaleTimeString('es-ES', {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })} - {new Date(clock.check_out).toLocaleTimeString('es-ES', {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })}</p>
+                                        </div>
+                                        <p className="text-gray-700">{calculateTotalHours(clock.check_in, clock.check_out)} h</p>
+                                    </div>
+                                ))
+                            )}
 
                         </div>
                     </div>
 
-                    <div className="p-4 pt-0 m-5 sm:px-8 mt-10 rounded-xl flex flex-col items-center bg-white shadow-lg mb-20">
+                    <div className="p-4 pt-0 m-5 sm:px-8 mt-10 rounded-xl flex flex-col items-center bg-white shadow-lg mb-25">
                         <div className="w-full max-w-2xl">
                             <h2 className="text-xl font-bold bg-white p-4 border-b border-gray-300">
                                 Rendimiento Semanal

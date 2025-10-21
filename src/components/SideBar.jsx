@@ -35,7 +35,7 @@ export default function SideBar() {
         isActive(location.pathname);
     }, [location]);
 
-    console.log("Active Path:", activePath);
+    // console.log("Active Path:", activePath);
 
     const getCompanyData = async () => {
         try {

@@ -22,6 +22,8 @@ import Absences from "./components/Absences.jsx";
 import Info from "./components/Info.jsx";
 import Break from "./components/Break.jsx";
 import TestTailwind from "./components/TestTailwind.jsx";
+import ClocksHistory from "./components/ClocksHistory.jsx";
+import BreaksHistory from "./components/BreaksHistory.jsx";
 
 export default function App() {
 
@@ -51,6 +53,8 @@ export default function App() {
         <Route path="/vacations" element={<Vacations />} />
         <Route path="/absences" element={<Absences />} /> 
         <Route path="/test-tailwind" element={<TestTailwind />} />
+        <Route path="/clock/history" element={<ClocksHistory />} />
+        <Route path="/break/history" element={<BreaksHistory />} />
       </Routes>
     </BrowserRouter>
   )

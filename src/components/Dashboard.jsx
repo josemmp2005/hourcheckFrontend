@@ -220,10 +220,10 @@ export default function Dashboard() {
     return (
       <section className="lg:flex min-h-screen bg-background">
         <Header />
-        <div className="w-full p-6 lg:pl-70">
+        <div className="w-full pt-20 lg:pl-70 sm:p-6">
           <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center mb-6">
-            <div className="flex-1 ">
-              <div className="p-7 flex bg-white justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors">
+            <div className="flex-1 flex flex-col h-100 place-content-around">
+              <div className="p-7 flex bg-white justify-between items-center border border-gray-400 rounded-xl shadow-md m-2 mb-4 cursor-pointer hover:bg-gray-50 transition-colors">
                 <p className="text-xl font-semibold text-secondary">
                   {serverTime ? serverTime.toLocaleTimeString('es-ES', {
                     hour: '2-digit',
@@ -240,17 +240,17 @@ export default function Dashboard() {
                   }) : ''}
                 </p>
               </div>
-              <div className="p-7 flex bg-white justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/clock')}>
+              <div className="p-7 flex bg-white justify-between items-center border border-gray-400 rounded-xl shadow-md m-2 mb-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/clock')}>
                 <p>Ultimo Clock In a las XX:XXh </p>
                 <img src={timerIcon} alt="Timer Icon" />
               </div>
-              <div className="p-7 bg-white flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-6 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/break')}>
+              <div className="p-7 bg-white flex justify-between items-center border border-gray-400 rounded-xl shadow-md m-2 mb-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => navigate('/break')}>
                 <p>Break </p>
                 <img src={timerIcon} alt="Timer Icon" />
               </div>
             </div>
 
-            <div className="flex-2 flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center">
+            <div className="flex-2 flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center m-2">
               <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
                 <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
 
@@ -301,7 +301,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:justify-center gap-5 lg:items-center mb-6">
+          <div className="flex flex-col lg:flex-row lg:justify-center gap-5 lg:items-center mb-6 m-2">
             <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
               <h3 className="text-lg font-semibold mb-2">Rendimiento Mensual</h3>
               <p className="text-gray-600 text-sm mb-4">Comparativa de productividad por meses</p>
@@ -348,7 +348,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center gap-5">
+          <div className="flex flex-col lg:flex-row lg:justify-around lg:items-center gap-5 m-2">
             <div className="flex flex-col sm:flex-row lg:justify-center gap-5 lg:items-center w-full">
               <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
                 <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
@@ -374,7 +374,7 @@ export default function Dashboard() {
                 </ResponsiveContainer>
               </div>
 
-              <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full">
+              <div className="bg-white rounded-xl shadow-md border border-gray-400 p-6 w-full ">
                 <h3 className="text-lg font-semibold mb-2">Rendimiento Semanal</h3>
                 <p className="text-gray-600 text-sm mb-4">Productividad por semanas del mes actual</p>
                 <ResponsiveContainer width="100%" height={300}>
